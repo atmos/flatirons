@@ -1,0 +1,60 @@
+class Servers < Application
+  include OpenID::Server
+  # ...and remember, everything returned from an action
+  # goes to the client...
+  def index
+    begin
+      oidreq = server.decode_request(params)
+    rescue ProtocolError => e
+      # invalid openid request, so just display a page with an error message
+      return e.to_s
+    end
+    
+    # no openid.mode was given
+    unless oidreq
+      return("This is an OpenID server endpoint.")
+    end
+    
+    oidresp = nil
+
+    if oidreq.kind_of?(CheckIDRequest)
+      identity = oidreq.identity
+
+      if oidreq.id_select
+        if oidreq.immediate
+          oidresp = oidreq.answer(false)
+        elsif session[:username].nil?
+          # The user hasn't logged in.
+          return show_decision_page(oidreq)
+        else
+          # Else, set the identity to the one the user is using.
+          identity = url_for_user
+        end
+      end
+      
+      if oidresp
+        nil
+      elsif self.is_authorized(identity, oidreq.trust_root)
+        oidresp = oidreq.answer(true, nil, identity)
+
+        # add the sreg response if requested
+        add_sreg(oidreq, oidresp)
+        # ditto pape
+        add_pape(oidreq, oidresp)
+
+      elsif oidreq.immediate
+        server_url = url_for :action => 'index'
+        oidresp = oidreq.answer(false, server_url)
+
+      else
+        return show_decision_page(oidreq)
+      end
+
+    else
+      oidresp = server.handle_request(oidreq)
+    end
+
+    self.render_response(oidresp)      
+  end
+  
+end

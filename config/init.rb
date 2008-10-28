@@ -1,7 +1,7 @@
 # Go to http://wiki.merbivore.com/pages/init-rb
- 
+gem 'ruby-openid', '2.1.2'
 require 'config/dependencies.rb'
- 
+
 use_orm :datamapper
 use_test :rspec
 use_template_engine :erb
@@ -16,6 +16,11 @@ Merb::Config.use do |c|
 end
  
 Merb::BootLoader.before_app_loads do
+  require "openid"
+  require "openid/consumer/discovery"
+  require 'openid/extensions/sreg'
+  require 'openid/extensions/pape'
+  require 'openid/store/filesystem'
   # This will get executed after dependencies have been loaded but before your app's classes have loaded.
 end
  
