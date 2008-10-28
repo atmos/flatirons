@@ -7,13 +7,11 @@ class Servers < Application
       oidreq = server.decode_request(params)
     rescue ProtocolError => e
       # invalid openid request, so just display a page with an error message
-      return e.to_s
+      raise InternalServerError.new(e.to_s)
     end
     
-    # no openid.mode was given
-    unless oidreq
-      return("This is an OpenID server endpoint.")
-    end
+    # no openid.mode was given, FIXME I've yet to see this case hit
+    return("This is an OpenID server endpoint.") unless oidreq
     
     oidresp = nil
 
@@ -34,7 +32,7 @@ class Servers < Application
       
       if oidresp
         nil
-      elsif self.is_authorized(identity, oidreq.trust_root)
+      elsif authorized?(identity, oidreq.trust_root)
         oidresp = oidreq.answer(true, nil, identity)
 
         # add the sreg response if requested
@@ -43,7 +41,7 @@ class Servers < Application
         add_pape(oidreq, oidresp)
 
       elsif oidreq.immediate
-        server_url = url_for :action => 'index'
+        server_url = url(:servers)
         oidresp = oidreq.answer(false, server_url)
 
       else
