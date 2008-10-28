@@ -16,11 +16,13 @@ describe Servers, "index action" do
   end
 
 
-  describe "with openid params unauthenticated" do
+  describe "with openid params but unauthorized" do
     before(:each) do
       params = {"openid.mode"=>"checkid_setup", "openid.return_to" => 'http://goatse.cx',
                 'openid.identity' => 'http://openid.goatse.xc/user/atmos'}
-      @response = dispatch_to(Servers, :index, params)
+      @response = dispatch_to(Servers, :index, params) do |controller|
+        mock(controller).authorized?(params['openid.identity'], params['openid.return_to']) { false }
+      end
     end
     it "should return http success" do
       @response.status.should == 200
@@ -30,19 +32,20 @@ describe Servers, "index action" do
     end
   end
   
-  describe "with openid params authenticated" do
+  describe "with openid params and authorized" do
     before(:each) do
       params = {"openid.mode"=>"checkid_setup", "openid.return_to" => 'http://goatse.cx',
                 'openid.identity' => 'http://openid.goatse.xc/user/atmos'}
       @response = dispatch_to(Servers, :index, params) do |controller|
         stub(controller).session { {:username => 'atmos'} }
+        mock(controller).authorized?(params['openid.identity'], params['openid.return_to']) { true }
       end
     end
     it "should return http success" do
-      @response.status.should == 200
+      @response.status.should == 302
     end
     it "should display the decision form" do
-      @response.body.should match(%r!action="/servers/decision">!)
+      @response.body.should match(%r!href="http://goatse.cx?.*"!)
     end
   end
   

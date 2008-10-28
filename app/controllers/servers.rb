@@ -36,7 +36,7 @@ class Servers < Application
         oidresp = oidreq.answer(true, nil, identity)
 
         # add the sreg response if requested
-        add_sreg(oidreq, oidresp)
+        add_simple_registration(oidreq, oidresp)
         # ditto pape
         add_pape(oidreq, oidresp)
 
@@ -52,7 +52,7 @@ class Servers < Application
       oidresp = server.handle_request(oidreq)
     end
 
-    self.render_response(oidresp)      
+    render_response(oidresp)      
   end
   
 end
