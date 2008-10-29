@@ -33,7 +33,7 @@ module Merb
       url(:users, {:id => session[:username]})
     end
     
-    def add_simple_registration(oidreq, oidresp)
+    def add_sreg(oidreq, oidresp)
       # check for Simple Registration arguments and respond
       sregreq = OpenID::SReg::Request.from_openid_request(oidreq)
 

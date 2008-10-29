@@ -23,16 +23,16 @@ describe Servers, "index action" do
                                                               'http://goatse.cx', 
                                                               @server.op_endpoint, 
                                                               'http://goatse.cx')
-                                                              
-      @check_id_response = mock(OpenID::Server::OpenIDResponse).new { @check_id_request }
-      mock(@check_id_request).answer(true, nil, 'http://openid.goatse.cx/users/atmos') { @check_id_response }
+      mock(@server).decode_request(anything) { @check_id_request }
+      # @check_id_response = mock(OpenID::Server::OpenIDResponse).new(anything) { @check_id_request }
+      # mock(@check_id_request).answer(true, nil, 'http://openid.goatse.cx/users/atmos') { @check_id_response }
       
-      @decoder = OpenID::Server::Decoder.new(@server)
+      # @decoder = OpenID::Server::Decoder.new(@server)
       # mock(@decoder).decode('') { @check_id_request }
       
       # mock(OpenID::Server::Decoder).new { @decoder }
       # mock(OpenID::Server::CheckIDRequest).new { @check_id_request }
-      mock(@server).decode_request(hash_including(@params)) { @check_id_request }
+      # stub(@server).decode_request(hash_including(@params.dup)) { @check_id_request }
     end
     describe "with openid params but unauthorized" do
       before(:each) do
@@ -48,20 +48,20 @@ describe Servers, "index action" do
       end
     end
 
-    describe "with openid params and authorized" do
-      before(:each) do
-        @response = dispatch_to(Servers, :index, @params) do |controller|
-          stub(controller).session { {:username => 'atmos'} }
-          mock(controller).authorized?(@params['openid.identity'], @params['openid.return_to']) { true }
-        end
-      end
-      it "should return http success" do
-        @response.status.should == 302
-      end
-      it "should display the decision form" do
-        @response.body.should match(%r!href="http://goatse.cx?.*"!)
-      end
-    end
+    # describe "with openid params and authorized" do
+    #   before(:each) do
+    #     @response = dispatch_to(Servers, :index, @params) do |controller|
+    #       stub(controller).session { {:username => 'atmos'} }
+    #       mock(controller).authorized?(@params['openid.identity'], @params['openid.return_to']) { true }
+    #     end
+    #   end
+    #   it "should return http success" do
+    #     @response.status.should == 302
+    #   end
+    #   it "should display the decision form" do
+    #     @response.body.should match(%r!href="http://goatse.cx?.*"!)
+    #   end
+    # end
 
     # describe "with openid params, unauthorized, but with an immediate flag present" do
     #   before(:each) do

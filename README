@@ -9,3 +9,8 @@ merb 0.9.10.
 Requirements
 ------------
 % sudo gem install merb ruby-openid rr rspec
+
+Help/Guidance
+-------------
+http://jystewart.net/process/2007/10/a-ruby-on-rails-openid-server/
+http://lists.openidenabled.com/pipermail/dev/2007-March/000347.html

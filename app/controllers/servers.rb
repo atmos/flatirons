@@ -15,7 +15,7 @@ class Servers < Application
     
     oidresp = nil
 
-    pp oidreq
+    # pp oidreq
     if oidreq.kind_of?(CheckIDRequest)
       identity = oidreq.identity
 
@@ -37,18 +37,16 @@ class Servers < Application
         oidresp = oidreq.answer(true, nil, identity)
 
         # add the sreg response if requested
-        add_simple_registration(oidreq, oidresp)
+        add_sreg(oidreq, oidresp)
         # ditto pape
         add_pape(oidreq, oidresp)
 
       elsif oidreq.immediate
         server_url = url(:servers)
         oidresp = oidreq.answer(false, server_url)
-
       else
         return show_decision_page(oidreq)
       end
-
     else
       oidresp = server.handle_request(oidreq)
     end
