@@ -1,5 +1,6 @@
 # Go to http://wiki.merbivore.com/pages/init-rb
 gem 'ruby-openid', '2.1.2'
+gem 'addressable', '1.0.4'
 require 'config/dependencies.rb'
 
 use_orm :datamapper
