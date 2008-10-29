@@ -40,7 +40,6 @@ class Servers < Application
         add_sreg(oidreq, oidresp)
         # ditto pape
         add_pape(oidreq, oidresp)
-
       elsif oidreq.immediate
         server_url = url(:servers)
         oidresp = oidreq.answer(false, server_url)

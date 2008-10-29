@@ -1,5 +1,12 @@
 require File.join(File.dirname(__FILE__), '..', 'spec_helper.rb')
-
+shared_examples_for "redirecting to the decision page" do
+  it "should return http success" do
+    @response.status.should == 200
+  end
+  it "should display the decision form" do
+    @response.body.should match(%r!action="/servers/decision">!)
+  end
+end
 describe Servers, "index action" do
   before(:each) do
     @store = OpenID::Store::Filesystem.new(Merb.root / 'config' / 'openid-store-test')
@@ -39,12 +46,7 @@ describe Servers, "index action" do
           mock(controller).authorized?(@params['openid.identity'], @params['openid.return_to']) { false }
         end
       end
-      it "should return http success" do
-        @response.status.should == 200
-      end
-      it "should display the decision form" do
-        @response.body.should match(%r!action="/servers/decision">!)
-      end
+      it_should_behave_like "redirecting to the decision page"
     end
 
     describe "with openid params and authorized" do
@@ -69,30 +71,44 @@ describe Servers, "index action" do
       end
       it "should set the appropriate headers on redirect"
     end
-
-    describe "with openid params, unauthorized, but with an immediate flag present" do
+    describe "with openid params, unauthorized, immediate flag" do
       before(:each) do
         @message = OpenID::Message.new('http://specs.openid.net/auth/2.0')        
         @check_id_request.message = @message
-        
-        @check_id_response = OpenID::Server::OpenIDResponse.new(@check_id_request)
-        
-        mock(@check_id_request).answer(false, '/servers') { @check_id_response }
-        mock(@check_id_request).immediate { true }
-    
-        @response = dispatch_to(Servers, :index, @params) do |controller|
-          stub(controller).session { {:username => 'atmos'} }
-          mock(controller).authorized?(@params['openid.identity'], @params['openid.return_to']) { false }
-        end
-      end
-      it "should return http redirect" do
-        @response.status.should == 302
-      end
-      it "should redirect back to the site" do
-        @response.body.should match(%r!href="http://goatse.cx?.*"!)
-      end
-      it "should set the appropriate headers on redirect"
       
+        @check_id_response = OpenID::Server::OpenIDResponse.new(@check_id_request)
+      
+      end
+      describe "set to true" do
+        before(:each) do
+          mock(@check_id_request).answer(false, '/servers') { @check_id_response }
+          mock(@check_id_request).immediate { true }
+    
+          @response = dispatch_to(Servers, :index, @params) do |controller|
+            stub(controller).session { {:username => 'atmos'} }
+            mock(controller).authorized?(@params['openid.identity'], @params['openid.return_to']) { false }
+          end
+        end
+        it "should return http redirect" do
+          @response.status.should == 302
+        end
+        it "should redirect back to the site" do
+          @response.body.should match(%r!href="http://goatse.cx?.*"!)
+        end
+        it "should set the appropriate headers on redirect"
+      end
+    
+      describe "set to false" do
+        before(:each) do
+          mock(@check_id_request).immediate { false }
+    
+          @response = dispatch_to(Servers, :index, @params) do |controller|
+            stub(controller).session { {:username => 'atmos'} }
+            mock(controller).authorized?(@params['openid.identity'], @params['openid.return_to']) { false }
+          end
+        end
+        it_should_behave_like "redirecting to the decision page"
+      end
     end
   end
 end
