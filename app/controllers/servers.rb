@@ -15,6 +15,7 @@ class Servers < Application
     
     oidresp = nil
 
+    pp oidreq
     if oidreq.kind_of?(CheckIDRequest)
       identity = oidreq.identity
 
@@ -52,7 +53,6 @@ class Servers < Application
       oidresp = server.handle_request(oidreq)
     end
 
-    render_response(oidresp)      
+    render_response(oidresp)
   end
-  
 end
