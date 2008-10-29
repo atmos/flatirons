@@ -49,10 +49,9 @@ describe Servers, "index action" do
 
     describe "with openid params and authorized" do
       before(:each) do
-        # mock(OpenID::Server::CheckIDRequest).new { @check_id_request }                                                          
-        @message = OpenID::Message.new('http://specs.openid.net/auth/2.0')
-        
+        @message = OpenID::Message.new('http://specs.openid.net/auth/2.0')        
         @check_id_request.message = @message
+        
         @check_id_response = OpenID::Server::OpenIDResponse.new(@check_id_request)
         
         mock(@check_id_request).answer(true, nil, 'http://openid.goatse.cx/users/atmos') { @check_id_response }
@@ -71,22 +70,29 @@ describe Servers, "index action" do
       it "should set the appropriate headers on redirect"
     end
 
-    # describe "with openid params, unauthorized, but with an immediate flag present" do
-    #   before(:each) do
-    # 
-    #     mock(@check_id_request).immediate { true }
-    # 
-    #     @response = dispatch_to(Servers, :index, @params) do |controller|
-    #       stub(controller).session { {:username => 'atmos'} }
-    #       mock(controller).authorized?(@params['openid.identity'], @params['openid.return_to']) { false }
-    #     end
-    #   end
-    #   it "should return http success" do
-    #     @response.status.should == 302
-    #   end
-    #   it "should display the decision form" do
-    #     @response.body.should match(%r!href="http://goatse.cx?.*"!)
-    #   end
-    # end
+    describe "with openid params, unauthorized, but with an immediate flag present" do
+      before(:each) do
+        @message = OpenID::Message.new('http://specs.openid.net/auth/2.0')        
+        @check_id_request.message = @message
+        
+        @check_id_response = OpenID::Server::OpenIDResponse.new(@check_id_request)
+        
+        mock(@check_id_request).answer(false, '/servers') { @check_id_response }
+        mock(@check_id_request).immediate { true }
+    
+        @response = dispatch_to(Servers, :index, @params) do |controller|
+          stub(controller).session { {:username => 'atmos'} }
+          mock(controller).authorized?(@params['openid.identity'], @params['openid.return_to']) { false }
+        end
+      end
+      it "should return http redirect" do
+        @response.status.should == 302
+      end
+      it "should redirect back to the site" do
+        @response.body.should match(%r!href="http://goatse.cx?.*"!)
+      end
+      it "should set the appropriate headers on redirect"
+      
+    end
   end
 end
