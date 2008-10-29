@@ -7,6 +7,16 @@ shared_examples_for "redirecting to the decision page" do
     @response.body.should match(%r!action="/servers/decision">!)
   end
 end
+shared_examples_for "successful authorization and redirection to the consumer" do
+  it "should return http redirect" do
+    @response.status.should == 302
+  end
+  it "should redirect back to the site requesting auth" do
+    @response.body.should match(%r!href="http://goatse.cx?.*"!)
+  end
+  it "should set the appropriate headers on redirect"
+end
+
 describe Servers, "index action" do
   before(:each) do
     @store = OpenID::Store::Filesystem.new(Merb.root / 'config' / 'openid-store-test')
@@ -63,13 +73,7 @@ describe Servers, "index action" do
           mock(controller).authorized?(@params['openid.identity'], @params['openid.return_to']) { true }
         end
       end
-      it "should return http redirect" do
-        @response.status.should == 302
-      end
-      it "should redirect back to the site requesting auth" do
-        @response.body.should match(%r!href="http://goatse.cx?.*"!)
-      end
-      it "should set the appropriate headers on redirect"
+      it_should_behave_like "successful authorization and redirection to the consumer"
     end
     describe "with openid params, unauthorized, immediate flag" do
       before(:each) do
@@ -89,13 +93,7 @@ describe Servers, "index action" do
             mock(controller).authorized?(@params['openid.identity'], @params['openid.return_to']) { false }
           end
         end
-        it "should return http redirect" do
-          @response.status.should == 302
-        end
-        it "should redirect back to the site" do
-          @response.body.should match(%r!href="http://goatse.cx?.*"!)
-        end
-        it "should set the appropriate headers on redirect"
+        it_should_behave_like "successful authorization and redirection to the consumer"
       end
     
       describe "set to false" do
