@@ -1,0 +1,52 @@
+#!/usr/bin/env ruby
+
+require 'yaml'
+
+if env = ARGV.shift
+  ENV["MERB_ENV"] = env
+end
+
+root = File.expand_path(File.dirname(__FILE__) + "/..")
+
+gem_config = YAML.load_file(root + "/config/gems.yml")
+command_source = "gem --config-file #{root}/.gemrc"
+
+File.open("#{root}/.gemrc", "w") do |f|
+  f.puts({
+    :sources => gem_config['sources'],
+    :update_sources => true,
+    :bulk_threshold => 1000,
+    :verbose => false,
+    'gemhome' => root + '/gems',
+    'gempath' => [root + '/gems'],
+    :backtrace => false,
+    :benchmark => false
+  }.to_yaml)
+end
+
+File.open('config/dependencies.rb', 'w') do |fp|
+  fp.puts "# auto generated from config/gems.yml"
+  gem_config['gems'].each do |g|
+    name_and_version = "#{g['name']}"
+    if v = g['version']
+      name_and_version << " --version='#{v}'"
+    end
+
+    fp.puts "dependency '#{g['require']}', '#{g['version'].gsub(%r![<>=]!, '')}'" if g['require']
+    next if system("#{command_source} spec #{name_and_version} >/dev/null 2>/dev/null")
+    puts "Installing #{name_and_version}"
+    unless system("#{command_source} install #{name_and_version} --no-ri --no-rdoc")
+      abort "Failed to install #{g.inspect}"
+    end
+
+  end
+end
+
+if system("#{root}/script/check #{ENV['MERB_ENV']} >/dev/null 2>/dev/null")
+  puts "Merb is ready to rumble!"
+else
+  puts "Merb is not ready!"
+  puts "Check the database.yml"
+  puts "Run script/check for more info"
+  exit 1
+end

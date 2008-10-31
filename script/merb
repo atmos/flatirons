@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+require 'yaml'
+
+root = File.expand_path(File.dirname(__FILE__) + '/..')
+ENV["GEM_HOME"] = root + '/gems'
+ENV["GEM_PATH"] = root + '/gems'
+gem_config = YAML.load_file(root + "/config/gems.yml")
+
+begin
+  require 'minigems'
+rescue LoadError
+  require 'rubygems'
+end
+gem 'merb-core', gem_config['gems'].find { |g| g['name'] == 'merb-core' }['version']
+require 'merb-core'
+
+load 'merb'

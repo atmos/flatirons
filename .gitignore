@@ -1,6 +1,8 @@
 .DS_Store
+.gemrc
 log/*
 tmp/*
+gems/*
 TAGS
 *~
 .#*

@@ -1,0 +1,103 @@
+---
+sources:
+  - http://gems.rubyforge.org/
+
+gems:
+  - name: rspec
+    version: 1.1.11
+    implied: true
+
+  - name: ruby-debug
+    implied: true
+
+  - name: rake
+    implied: true
+
+  - name: rcov
+    implied: true
+
+  - name: mongrel
+    implied: true
+
+  - name: rr
+    implied: true
+
+  - name: libxml-ruby
+    implied: true
+
+  - name: extlib
+    version: '=0.9.8'
+    require: extlib
+
+  - name: merb-core
+    version: '=0.9.12'
+    require: merb-core
+  
+  - name: merb-gen
+    version: '=0.9.12'
+
+  - name: merb-param-protection
+    version: '=0.9.12'
+    require: merb-param-protection
+
+  - name: merb-haml
+    version: '=0.9.12'
+    require: merb-haml
+    
+  - name: merb-auth-core
+    version: '=0.9.12'
+    require: merb-auth-core
+
+  - name: merb-auth-more
+    version: '=0.9.12'
+    require: merb-auth-more
+    
+  - name: merb-cache
+    version: '=0.9.12'
+    require: merb-cache
+  
+  - name: merb-helpers
+    version: '=0.9.12'
+    require: merb-helpers
+
+  - name: merb-assets
+    version: '=0.9.12'
+    require: merb-assets
+    
+  - name: merb-slices
+    version: '=0.9.12'
+    require: merb-slices
+
+  - name: merb-action-args
+    version: '=0.9.12'
+    require: merb-action-args
+
+  - name: merb_datamapper
+    version: '=0.9.6'
+    require: merb_datamapper
+
+  - name: dm-core
+    version: '=0.9.6'
+    require: 'dm-core'
+
+  - name: dm-validations
+    version: '=0.9.6'
+    require: dm-validations
+
+  - name: dm-serializer
+    version: '=0.9.6'
+    require: dm-serializer
+
+  - name: dm-timestamps
+    version: '=0.9.6'
+    require: dm-timestamps
+
+  - name: dm-types
+    version: '=0.9.6'
+    require: dm-types
+
+  - name: do_sqlite3
+    version: '=0.9.6'
+
+  - name: ruby-openid
+    version: '=2.1.2'

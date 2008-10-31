@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+
+root = File.expand_path(File.dirname(__FILE__) + '/..')
+ENV["GEM_HOME"] = root + '/gems'
+ENV["GEM_PATH"] = root + '/gems'
+
+require 'rubygems'
+gem 'rake'
+require 'rake'
+
+load 'rake'
