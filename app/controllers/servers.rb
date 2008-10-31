@@ -34,4 +34,5 @@ class Servers < Application
 
     render_response(oidresp)
   end
+
 end

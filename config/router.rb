@@ -36,7 +36,7 @@ Merb::Router.prepare do
   match("/servers").to(:controller => 'servers').name('servers')
   match("/servers/decision").to(:controller => 'servers', :action => 'decision').name('server_decision')
   
-  resource :users
+  resources :users, :member => {:xrds => :get}
   # This is the default route for /:controller/:action/:id
   # This is fine for most cases.  If you're heavily using resource-based
   # routes, you may want to comment/remove this line to prevent

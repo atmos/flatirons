@@ -26,5 +26,6 @@ Merb::BootLoader.before_app_loads do
 end
  
 Merb::BootLoader.after_app_loads do
+  DataMapper.auto_migrate!
   # This will get executed after your app's classes have been loaded.
 end
