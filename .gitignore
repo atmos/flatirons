@@ -4,6 +4,7 @@ log/*
 tmp/*
 gems/*
 TAGS
+config/openid-store/*
 *~
 .#*
 schema/schema.rb

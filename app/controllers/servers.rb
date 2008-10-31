@@ -1,3 +1,5 @@
+require 'pp'
+
 class Servers < Application
   include OpenID::Server
   # ...and remember, everything returned from an action
@@ -35,4 +37,36 @@ class Servers < Application
     render_response(oidresp)
   end
 
+  def decision
+    oidreq = session[:last_oidreq]
+
+    session[:last_oidreq] = nil
+
+    if params.has_key?(:cancel)
+      Merb::Logger.info("Cancelling OpenID Authentication")
+      return(redirect(oidreq.cancel_url))
+    else      
+      identity = oidreq.identity
+      oidresp = oidreq.answer(true, nil, identity)
+      add_sreg(oidreq, oidresp)
+      return render_response(oidresp)
+      # identity =~ /node\/(.+)$/
+      # openid_node = Chef::OpenIDRegistration.load($1)
+      # unless openid_node.validated
+      #   raise Unauthorized, "This nodes registration has not been validated"
+      # end
+      # if openid_node.password == encrypt_password(openid_node.salt, params[:password])     
+      #   if session[:approvals]
+      #     session[:approvals] << oidreq.trust_root
+      #   else
+      #     session[:approvals] = [oidreq.trust_root]
+      #   end
+      #   oidresp = oidreq.answer(true, nil, identity)
+      #   return self.render_response(oidresp)
+      # else
+      #   raise Unauthorized, "Invalid credentials"
+      # end
+    end
+    
+  end
 end
