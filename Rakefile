@@ -33,15 +33,3 @@ task :default => 'spec'
 # ADD YOUR CUSTOM TASKS IN /lib/tasks
 # NAME YOUR RAKE FILES file_name.rake
 ##############################################################################
-namespace :spec do
-  desc 'Run all the specs for ci'
-  task :ci => ["spec:bootstrap", "spec"] do |t|
-    puts 'DONE :D'
-  end
-
-  desc 'Setup the environment'
-  task :bootstrap do |t|
-    puts %x{script/update}
-    puts %x{#{parent_dir}/#{this_dir}/script/rake MERB_ENV=test dm:db:automigrate}
-  end
-end
