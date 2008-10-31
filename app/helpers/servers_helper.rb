@@ -10,13 +10,13 @@ module Merb
       return @server
     end
 
-    def show_decision_page(oidreq)
+    def show_decision_page(oidreq, message="Do you trust this site with your identity?")
       session[:last_oidreq] = oidreq
       @oidreq = oidreq
 
-      # if message
-      #   flash[:notice] = message
-      # end
+      if message
+        session[:notice] = message
+      end
       partial 'decide'
     end
     
