@@ -2,6 +2,7 @@
 gem 'ruby-openid', '2.1.2'
 gem 'addressable', '1.0.4'
 require 'config/dependencies.rb'
+require 'pp'
 
 use_orm :datamapper
 use_test :rspec
@@ -27,5 +28,6 @@ end
  
 Merb::BootLoader.after_app_loads do
   DataMapper.auto_migrate!
+  User.create(:login => 'atmoose', :email => 'atmos@atmos.org', :password => 'foo', :password_confirmation => 'foo')
   # This will get executed after your app's classes have been loaded.
 end

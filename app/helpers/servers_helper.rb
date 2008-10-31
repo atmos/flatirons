@@ -33,7 +33,7 @@ module Merb
       url(:users, {:id => session[:username]})
     end
     
-    def add_sreg(oidreq, oidresp)
+    def add_sreg(oidreq, oidresp, identity)
       # check for Simple Registration arguments and respond
       sregreq = OpenID::SReg::Request.from_openid_request(oidreq)
 
@@ -42,9 +42,9 @@ module Merb
       # and the user should be asked for permission to release
       # it.
       sreg_data = {
-        'nickname' => session[:username],
+        'nickname' => User.first(:login => identity),
         'fullname' => 'Mayor McCheese',
-        'email' => 'mayor@example.com'
+        'email' => session.user.email
       }
 
       sregresp = OpenID::SReg::Response.extract_response(sregreq, sreg_data)
@@ -72,8 +72,51 @@ module Merb
       when 302
         redirect web_response.headers['location']
       else
-        render :text => web_response.body, :status => 400
+        web_response.body
       end
+    end
+    def user_xrds
+      types = [
+               OpenID::OPENID_2_0_TYPE,
+               OpenID::OPENID_1_0_TYPE,
+               OpenID::SREG_URI,
+              ]
+
+      headers['content-type'] = 'application/xrds+xml'
+      render_xrds(types)
+    end
+
+    def idp_xrds
+      types = [
+               OpenID::OPENID_IDP_2_0_TYPE,
+              ]
+
+      headers['content-type'] = 'application/xrds+xml'
+      render_xrds(types)
+    end
+
+    def render_xrds(types)
+      type_str = ""
+
+      types.each { |uri|
+        type_str += "<Type>#{uri}</Type>\n      "
+      }
+
+      yadis = <<EOS
+<?xml version="1.0" encoding="UTF-8"?>
+<xrds:XRDS
+    xmlns:xrds="xri://$xrds"
+    xmlns="xri://$xrd*($v*2.0)">
+  <XRD>
+    <Service priority="0">
+      #{type_str}
+      <URI>#{absolute_url(:servers)}</URI>
+    </Service>
+  </XRD>
+</xrds:XRDS>
+EOS
+
+      yadis
     end
   end
 end # Merb

@@ -52,6 +52,10 @@ gems:
     version: '=0.9.12'
     require: merb-auth-more
     
+  - name: merb-auth-slice-password
+    version: '=0.9.12'
+    require: merb-auth-slice-password
+    
   - name: merb-cache
     version: '=0.9.12'
     require: merb-cache

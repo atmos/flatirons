@@ -19,7 +19,7 @@ class Servers < Application
         oidresp = oidreq.answer(true, nil, identity)
         # 
         # # add the sreg response if requested
-        # add_sreg(oidreq, oidresp)
+        # add_sreg(oidreq, oidresp, identity)
         # # ditto pape
         # add_pape(oidreq, oidresp)
       elsif oidreq.immediate
@@ -46,7 +46,6 @@ class Servers < Application
     else      
       identity = oidreq.identity
       oidresp = oidreq.answer(true, nil, identity)
-      add_sreg(oidreq, oidresp)
       return render_response(oidresp)
       # identity =~ /node\/(.+)$/
       # openid_node = Chef::OpenIDRegistration.load($1)
@@ -66,5 +65,33 @@ class Servers < Application
       # end
     end
     
+  end
+  
+  def users_page(id)
+    @user = User.first(:login => id)
+    # Yadis content-negotiation: we want to return the xrds if asked for.
+    accept = request.env['HTTP_ACCEPT']
+
+    # This is not technically correct, and should eventually be updated
+    # to do real Accept header parsing and logic.  Though I expect it will work
+    # 99% of the time.
+    if accept and accept.include?('application/xrds+xml')
+      return user_xrds
+    end
+
+    # content negotiation failed, so just render the user page
+    xrds_url = absolute_url(:xrds_user, {:id => @user.id})
+    identity_page = <<EOS
+<html><head>
+<meta http-equiv="X-XRDS-Location" content="#{xrds_url}" />
+<link rel="openid.server" href="#{absolute_url(:user, {:id => @user.id})}" />
+</head><body><p>OpenID identity page for #{@user.login}</p>
+</body></html>
+EOS
+
+    # Also add the Yadis location header, so that they don't have
+    # to parse the html unless absolutely necessary.
+    headers['X-XRDS-Location'] = xrds_url
+    identity_page
   end
 end

@@ -35,6 +35,7 @@ Merb::Router.prepare do
 
   match("/servers").to(:controller => 'servers').name('servers')
   match("/servers/decision").to(:controller => 'servers', :action => 'decision').name('server_decision')
+  match("/users/:id").to(:controller => :servers, :action => :users_page)
   
   resources :users, :member => {:xrds => :get}
   # This is the default route for /:controller/:action/:id
