@@ -1,5 +1,3 @@
-require 'pp'
-
 class Servers < Application
   include OpenID::Server
   # ...and remember, everything returned from an action
@@ -43,7 +41,7 @@ class Servers < Application
     session[:last_oidreq] = nil
 
     if params.has_key?(:cancel)
-      Merb::Logger.info("Cancelling OpenID Authentication")
+      Merb.logger.info("Cancelling OpenID Authentication")
       return(redirect(oidreq.cancel_url))
     else      
       identity = oidreq.identity

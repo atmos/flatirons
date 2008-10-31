@@ -5,6 +5,7 @@ tmp/*
 gems/*
 TAGS
 config/openid-store/*
+config/openid-store-test/*
 *~
 .#*
 schema/schema.rb
