@@ -1,4 +1,5 @@
 class Servers < Application
+  before :ensure_authenticated, :only => [:acceptance]
   include OpenID::Server
   # ...and remember, everything returned from an action
   # goes to the client...
@@ -26,13 +27,23 @@ class Servers < Application
         server_url = url(:servers)
         oidresp = oidreq.answer(false, server_url)
       else
-        return show_decision_page(oidreq)
+        session[:last_oidreq] = oidreq
+        return(redirect(url(:acceptance)))
       end
     else
       oidresp = server.handle_request(oidreq)
     end
 
     render_response(oidresp)
+  end
+  
+  def acceptance(message="Do you trust this site with your identity?")
+    @oidreq = session[:last_oidreq]
+
+    if message
+      session[:notice] = message
+    end
+    render
   end
 
   def decision
@@ -80,11 +91,11 @@ class Servers < Application
     end
 
     # content negotiation failed, so just render the user page
-    xrds_url = absolute_url(:xrds_user, {:id => @user.id})
+    xrds_url = absolute_url(:xrds_user, {:id => params[:id]})
     identity_page = <<EOS
 <html><head>
 <meta http-equiv="X-XRDS-Location" content="#{xrds_url}" />
-<link rel="openid.server" href="#{absolute_url(:user, {:id => @user.id})}" />
+<link rel="openid.server" href="#{absolute_url(:user, {:id => params[:id]})}" />
 </head><body><p>OpenID identity page for #{@user.login}</p>
 </body></html>
 EOS

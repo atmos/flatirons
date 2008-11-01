@@ -2,7 +2,7 @@ module Merb
   module ServersHelper
     def server
       if @server.nil?
-        server_url = url(:servers)
+        server_url = absolute_url(:servers)
         dir = Merb.root / 'config' / 'openid-store'
         store = OpenID::Store::Filesystem.new(dir)
         @server = OpenID::Server::Server.new(store, server_url)

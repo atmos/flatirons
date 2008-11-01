@@ -1,10 +1,10 @@
 require File.join(File.dirname(__FILE__), '..', '..', 'spec_helper.rb')
-shared_examples_for "redirecting to the decision page" do
+shared_examples_for "redirecting to the acceptance page" do
   it "should return http success" do
-    @response.status.should == 200
+    @response.status.should == 302
   end
   it "should display the decision form" do
-    @response.body.should match(%r!action="/servers/decision">!)
+    @response.should have_xpath("//a[@href='/servers/acceptance']")
   end
 end
 shared_examples_for "successful authorization and redirection to the consumer" do
@@ -56,7 +56,7 @@ describe Servers, "index action" do
           mock(controller).authorized?(@params['openid.identity'], @params['openid.return_to']) { false }
         end
       end
-      it_should_behave_like "redirecting to the decision page"
+      it_should_behave_like "redirecting to the acceptance page"
     end
 
     describe "with openid params and authorized" do
@@ -105,7 +105,7 @@ describe Servers, "index action" do
             mock(controller).authorized?(@params['openid.identity'], @params['openid.return_to']) { false }
           end
         end
-        it_should_behave_like "redirecting to the decision page"
+        it_should_behave_like "redirecting to the acceptance page"
       end
     end
   end
