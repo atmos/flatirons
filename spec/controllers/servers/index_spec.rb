@@ -23,7 +23,7 @@ describe Servers, "index action" do
     @server = OpenID::Server::Server.new(@store, '/servers')
 
     mock(OpenID::Store::Filesystem).new(Merb.root / 'config' / 'openid-store') { @store }
-    mock(OpenID::Server::Server).new(@store, '/servers') { @server }
+    mock(OpenID::Server::Server).new(@store, 'http://localhost/servers') { @server }
   end
 
   describe "empty params" do
@@ -43,12 +43,6 @@ describe Servers, "index action" do
 
       mock(@server).decode_request(anything) { @check_id_request }
 
-      # @decoder = OpenID::Server::Decoder.new(@server)
-      # mock(@decoder).decode('') { @check_id_request }
-
-      # mock(OpenID::Server::Decoder).new { @decoder }
-      # mock(OpenID::Server::CheckIDRequest).new { @check_id_request }
-      # stub(@server).decode_request(hash_including(@params.dup)) { @check_id_request }
     end
     describe "with openid params but unauthorized" do
       before(:each) do

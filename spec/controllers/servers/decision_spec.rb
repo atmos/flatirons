@@ -41,7 +41,7 @@ describe Servers, "#decision" do
     describe "agreement" do
       before(:each) do
         mock(OpenID::Store::Filesystem).new(Merb.root / 'config' / 'openid-store') { @store }
-        mock(OpenID::Server::Server).new(@store, '/servers') { @server }
+        mock(OpenID::Server::Server).new(@store, 'http://localhost/servers') { @server }
         
         mock(@check_id_request).answer(true, nil, 'http://openid.goatse.cx/users/atmos') { @check_id_response }
         

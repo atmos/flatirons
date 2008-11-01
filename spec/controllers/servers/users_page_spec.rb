@@ -26,7 +26,7 @@ describe Servers do
       @response.should be_successful
     end
     it "have the openid provider in the response" do
-      @response.body.should have_xpath("//link[@rel='openid.server' and @href='http://localhost/users/#{User.first.id}']")
+      @response.body.should have_xpath("//link[@rel='openid.server' and @href='http://localhost/users/#{User.first.login}']")
     end
   end
 end
