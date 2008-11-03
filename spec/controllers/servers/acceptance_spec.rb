@@ -14,10 +14,10 @@ describe Servers, "#acceptance" do
 
   describe "unauthenticated" do
     before(:each) do
-      @check_id_request = OpenID::Server::CheckIDRequest.new('http://openid.goatse.cx/users/atmos', 
-                                                              'http://goatse.cx', 
+      @check_id_request = OpenID::Server::CheckIDRequest.new('http://localhost/users/atmos', 
+                                                              'http://localhost', 
                                                               @server.op_endpoint, 
-                                                              'http://goatse.cx')
+                                                              'http://localhost')
 
       @user = User.first(:login => 'atmoose')
       @response = dispatch_to(Servers, :acceptance, {}) do |controller|
@@ -41,12 +41,12 @@ describe Servers, "#acceptance" do
   # 
   # describe "decision screens" do
   #   before(:each) do
-  #     @params = {"openid.mode"=>"checkid_setup", "openid.return_to" => 'http://goatse.cx',
-  #               'openid.identity' => 'http://openid.goatse.cx/users/atmos'}
-  #     @check_id_request = OpenID::Server::CheckIDRequest.new('http://openid.goatse.cx/users/atmos', 
-  #                                                             'http://goatse.cx', 
+  #     @params = {"openid.mode"=>"checkid_setup", "openid.return_to" => 'http://localhost',
+  #               'openid.identity' => 'http://localhost/users/atmos'}
+  #     @check_id_request = OpenID::Server::CheckIDRequest.new('http://localhost/users/atmos', 
+  #                                                             'http://localhost', 
   #                                                             @server.op_endpoint, 
-  #                                                             'http://goatse.cx')
+  #                                                             'http://localhost')
   #     @message = OpenID::Message.new('http://specs.openid.net/auth/2.0')        
   #     @check_id_request.message = @message
   # 
@@ -69,7 +69,7 @@ describe Servers, "#acceptance" do
   #       mock(OpenID::Store::Filesystem).new(Merb.root / 'config' / 'openid-store') { @store }
   #       mock(OpenID::Server::Server).new(@store, 'http://localhost/servers') { @server }
   #       
-  #       mock(@check_id_request).answer(true, nil, 'http://openid.goatse.cx/users/atmos') { @check_id_response }
+  #       mock(@check_id_request).answer(true, nil, 'http://localhost/users/atmos') { @check_id_response }
   #       
   #       @response = dispatch_to(Servers, :decision, {:yes => :yes}) do |controller|
   #         mock(controller.session).[](:last_oidreq) { @check_id_request }
@@ -79,7 +79,7 @@ describe Servers, "#acceptance" do
   #       @response.status.should == 302
   #     end
   #     it "should render the good stuff" do
-  #       @response.body.should match(%r!<a href="http://goatse.cx\?.*?"!)
+  #       @response.body.should match(%r!<a href="http://localhost\?.*?"!)
   #     end
   #   end
   # end

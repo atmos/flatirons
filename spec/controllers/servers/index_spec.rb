@@ -12,7 +12,7 @@ shared_examples_for "successful authorization and redirection to the consumer" d
     @response.status.should == 302
   end
   it "should redirect back to the site requesting auth" do
-    @response.body.should match(%r!href="http://goatse.cx?.*"!)
+    @response.body.should match(%r!href="http://localhost?.*"!)
   end
   it "should set the appropriate headers on redirect"
 end
@@ -34,12 +34,12 @@ describe Servers, "index action" do
 
   describe "checkIDRequests" do
     before(:each) do
-      @params = {"openid.mode"=>"checkid_setup", "openid.return_to" => 'http://goatse.cx',
-                'openid.identity' => 'http://openid.goatse.cx/users/atmos'}
-      @check_id_request = OpenID::Server::CheckIDRequest.new('http://openid.goatse.cx/users/atmos', 
-                                                              'http://goatse.cx', 
+      @params = {"openid.mode"=>"checkid_setup", "openid.return_to" => 'http://localhost',
+                'openid.identity' => 'http://localhost/users/atmos'}
+      @check_id_request = OpenID::Server::CheckIDRequest.new('http://localhost/users/atmos', 
+                                                              'http://localhost', 
                                                               @server.op_endpoint, 
-                                                              'http://goatse.cx')
+                                                              'http://localhost')
 
       mock(@server).decode_request(anything) { @check_id_request }
 
@@ -60,7 +60,7 @@ describe Servers, "index action" do
         
         @check_id_response = OpenID::Server::OpenIDResponse.new(@check_id_request)
         
-        mock(@check_id_request).answer(true, nil, 'http://openid.goatse.cx/users/atmos') { @check_id_response }
+        mock(@check_id_request).answer(true, nil, 'http://localhost/users/atmos') { @check_id_response }
                 
         @response = dispatch_to(Servers, :index, @params) do |controller|
           stub(controller).session { {:username => 'atmos'} }

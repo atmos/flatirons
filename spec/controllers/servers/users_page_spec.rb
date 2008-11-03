@@ -26,7 +26,10 @@ describe Servers do
       @response.should be_successful
     end
     it "have the openid provider in the response" do
-      @response.body.should have_xpath("//link[@rel='openid.server' and @href='http://localhost/users/#{User.first.login}']")
+      @response.body.should have_xpath("//link[@rel='openid.server' and @href='http://localhost/servers']")
+    end
+    it "have the user xrds location in the response body" do
+      @response.body.should have_xpath("//meta[@http-equiv='X-XRDS-Location' and @content='http://localhost/users/#{User.first.login}/xrds']")
     end
   end
 end
