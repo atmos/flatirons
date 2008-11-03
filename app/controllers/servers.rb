@@ -4,7 +4,7 @@ class Servers < Application
   # ...and remember, everything returned from an action
   # goes to the client...
   def index
-    oidreq = server.decode_request(params)
+    oidreq = session[:last_oidreq].nil? ? server.decode_request(params) : session[:last_oidreq]
     
     # no openid.mode was given, FIXME I've yet to see this case hit
     return("This is an OpenID server endpoint.") unless oidreq

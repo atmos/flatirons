@@ -11,3 +11,12 @@ Merb::Slices::config[:"merb-auth-slice-password"][:no_default_strategies] = true
 
 Merb::Authentication.activate!(:default_password_form)
 
+@maintain_session_keys ||= [:authentication_strategies]
+
+
+class Merb::Authentication
+  def self.maintain_session_keys=(keys)
+    @maintain_session_keys = keys
+  end
+end
+Merb::Authentication.maintain_session_keys = [:authentication_strategies, :last_oidreq]
