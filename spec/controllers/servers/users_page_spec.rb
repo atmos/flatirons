@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/../../spec_helper'
 describe Servers do
   before(:each) do
     User.all.destroy!
-    User.create(:login => 'atmos', :email => 'atmos@atmos.org', :password => 'zomgwtfbbq', :password_confirmation => 'zomgwtfbbq')    
+    User.create(:login => 'atmos', :email => 'atmos@atmos.org', :identity_url => 'http://localhost/users/atmos', :password => 'zomgwtfbbq', :password_confirmation => 'zomgwtfbbq')    
   end
   
   describe "accepting xrds+xml" do

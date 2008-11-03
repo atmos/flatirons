@@ -33,30 +33,15 @@ module Merb
       url(:users, {:id => session[:username]})
     end
     
-    def add_sreg(oidreq, oidresp, identity)
-      # check for Simple Registration arguments and respond
-      sregreq = OpenID::SReg::Request.from_openid_request(oidreq)
-
-      return if sregreq.nil?
-      # In a real application, this data would be user-specific,
-      # and the user should be asked for permission to release
-      # it.
+    def add_sreg(oidreq, oidresp)
+      user = User.first(:identity_url => oidreq.identity)
+      return if user.nil?
       sreg_data = {
-        'nickname' => User.first(:login => identity),
-        'fullname' => 'Mayor McCheese',
-        'email' => session.user.email
+        'nickname' => user.login,
+        'email'    => user.email
       }
-
-      sregresp = OpenID::SReg::Response.extract_response(sregreq, sreg_data)
+      sregresp = OpenID::SReg::Response.new(sreg_data)
       oidresp.add_extension(sregresp)
-    end
-    
-    def add_pape(oidreq, oidresp)
-      papereq = OpenID::PAPE::Request.from_openid_request(oidreq)
-      return if papereq.nil?
-      paperesp = OpenID::PAPE::Response.new
-      paperesp.nist_auth_level = 0 # we don't even do auth at all!
-      oidresp.add_extension(paperesp)
     end
     
     def render_response(oidresp)
@@ -75,6 +60,7 @@ module Merb
         web_response.body
       end
     end
+    
     def user_xrds
       types = [
                OpenID::OPENID_2_0_TYPE,

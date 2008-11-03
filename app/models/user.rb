@@ -14,6 +14,7 @@ class User
   property :id,     Serial
   property :login,  String, :nullable => false
   property :email,  String, :nullable => false
+  property :identity_url, String, :nullable => false
   
   validates_is_unique :login
   validates_is_unique :email

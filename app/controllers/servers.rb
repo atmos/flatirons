@@ -10,7 +10,19 @@ class Servers < Application
     return("This is an OpenID server endpoint.") unless oidreq
     
     oidresp = nil
-
+    
+    if oidreq.id_select
+      if oidreq.immediate
+        oidresp = oidreq.answer(false)
+      elsif session[:username].nil?
+        session[:last_oidreq] = oidreq
+        return(redirect(url(:acceptance)))
+      else
+        # Else, set the identity to the one the user is using.
+        identity = url_for_user
+      end
+    end
+    
     if oidreq.kind_of?(CheckIDRequest)
       identity = oidreq.identity
       
@@ -18,14 +30,10 @@ class Servers < Application
         nil
       elsif authorized?(identity, oidreq.trust_root)
         oidresp = oidreq.answer(true, nil, identity)
-        # 
-        # # add the sreg response if requested
-        # add_sreg(oidreq, oidresp, identity)
-        # # ditto pape
-        # add_pape(oidreq, oidresp)
+        add_sreg(oidreq, oidresp)
+
       elsif oidreq.immediate
-        server_url = url(:servers)
-        oidresp = oidreq.answer(false, server_url)
+        oidresp = oidreq.answer(false, url(:servers))
       else
         session[:last_oidreq] = oidreq
         return(redirect(url(:acceptance)))
@@ -47,9 +55,7 @@ class Servers < Application
   end
 
   def decision
-    oidreq = session[:last_oidreq]
-
-    session[:last_oidreq] = nil
+    oidreq = session.delete(:last_oidreq)
 
     if params.has_key?(:cancel)
       Merb.logger.info("Cancelling OpenID Authentication")
@@ -57,6 +63,8 @@ class Servers < Application
     else      
       identity = oidreq.identity
       oidresp = oidreq.answer(true, nil, identity)
+      add_sreg(oidreq, oidresp)
+      
       return render_response(oidresp)
       # identity =~ /node\/(.+)$/
       # openid_node = Chef::OpenIDRegistration.load($1)
