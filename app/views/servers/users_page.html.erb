@@ -1,0 +1,9 @@
+<html>
+  <head>
+    <meta http-equiv="X-XRDS-Location" content="<%= absolute_url(:user_xrds, {:id => params[:id]}) %>" />
+    <link rel="openid.server" href="<%= absolute_url(:servers) %>" />
+  </head>
+  <body>
+    <p>OpenID identity page for #{params[:id]}</p>
+  </body>
+</html>

@@ -32,15 +32,6 @@ class Servers < Application
 
     render_response(oidresp)
   end
-  
-  def acceptance(message="Do you trust this site with your identity?")
-    @oidreq = session[:last_oidreq]
-
-    if message
-      session[:notice] = message
-    end
-    render
-  end
 
   def decision
     oidreq = session.delete(:last_oidreq)
@@ -87,18 +78,17 @@ class Servers < Application
     end
 
     # content negotiation failed, so just render the user page
-    xrds_url = absolute_url(:user_xrds, {:id => params[:id]})
-    identity_page = <<EOS
-<html><head>
-<meta http-equiv="X-XRDS-Location" content="#{xrds_url}" />
-<link rel="openid.server" href="#{absolute_url(:servers)}" />
-</head><body><p>OpenID identity page for #{params[:id]}</p>
-</body></html>
-EOS
-
     # Also add the Yadis location header, so that they don't have
-    # to parse the html unless absolutely necessary.
-    headers['X-XRDS-Location'] = xrds_url
-    identity_page
+    headers['X-XRDS-Location'] = absolute_url(:user_xrds, {:id => params[:id]})
+    render :layout => false
+  end
+  
+  def acceptance(message="Do you trust this site with your identity?")
+    @oidreq = session[:last_oidreq]
+
+    if message
+      session[:notice] = message
+    end
+    render
   end
 end
