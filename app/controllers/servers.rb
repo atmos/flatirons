@@ -11,18 +11,6 @@ class Servers < Application
     
     oidresp = nil
     
-    # if oidreq.id_select
-    #   if oidreq.immediate
-    #     oidresp = oidreq.answer(false)
-    #   elsif session[:username].nil?
-    #     session[:last_oidreq] = oidreq
-    #     return(redirect(url(:acceptance)))
-    #   else
-    #     # Else, set the identity to the one the user is using.
-    #     identity = url_for_user
-    #   end
-    # end
-    
     if oidreq.kind_of?(CheckIDRequest)
       identity = oidreq.identity
       
