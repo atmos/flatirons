@@ -64,17 +64,6 @@ module Merb
         web_response.body
       end
     end
-    
-    def user_xrds
-      types = [
-               OpenID::OPENID_2_0_TYPE,
-               OpenID::OPENID_1_0_TYPE,
-               OpenID::SREG_URI,
-              ]
-
-      headers['content-type'] = 'application/xrds+xml'
-      render_xrds(types)
-    end
 
     def idp_xrds
       types = [
@@ -82,16 +71,7 @@ module Merb
               ]
 
       headers['content-type'] = 'application/xrds+xml'
-      render_xrds(types)
-    end
-
-    def render_xrds(types)
-      type_str = ""
-
-      types.each { |uri|
-        type_str += "<Type>#{uri}</Type>\n      "
-      }
-      partial :yadis, :type_str => type_str
+      partial :yadis, :types => types
     end
   end
 end # Merb

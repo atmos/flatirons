@@ -4,7 +4,9 @@
     xmlns="xri://$xrd*($v*2.0)">
   <XRD>
     <Service priority="0">
-      <%= type_str %>
+      <% types.each do |typ| %>
+        <Type><%= typ %></Type>
+      <% end %>
       <URI><%= absolute_url(:servers) %></URI>
     </Service>
   </XRD>

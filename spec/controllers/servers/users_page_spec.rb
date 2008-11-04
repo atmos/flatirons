@@ -16,6 +16,9 @@ describe Servers do
     it "match this response body" do
       @response.body.should match(%r!<URI>http://localhost/servers</URI>!)
     end
+    it "has the X-XRDS-Location header set properly" do
+      @response.headers["X-XRDS-Location"].should == "http://localhost/users/atmos/xrds"
+    end
   end
   
   describe "accepting text/html" do
@@ -30,6 +33,9 @@ describe Servers do
     end
     it "have the user xrds location in the response body" do
       @response.body.should have_xpath("//meta[@http-equiv='X-XRDS-Location' and @content='http://localhost/users/#{User.first.login}/xrds']")
+    end
+    it "has the X-XRDS-Location header set properly" do
+      @response.headers["X-XRDS-Location"].should == "http://localhost/users/atmos/xrds"
     end
   end
 end

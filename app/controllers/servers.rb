@@ -70,16 +70,12 @@ class Servers < Application
   
   def users_page(id)
     provides :xrds, :html
-    # Yadis content-negotiation: we want to return the xrds if asked for.
-    accept = request.env['HTTP_ACCEPT']
 
-    # This is not technically correct, and should eventually be updated
-    # to do real Accept header parsing and logic.  Though I expect it will work
-    # 99% of the time.
-    if accept and accept.include?('application/xrds+xml')
-      return user_xrds
-    end
-
+    @types = [
+             OpenID::OPENID_2_0_TYPE,
+             OpenID::OPENID_1_0_TYPE,
+             OpenID::SREG_URI,
+            ]
     # content negotiation failed, so just render the user page
     # Also add the Yadis location header, so that they don't have
     headers['X-XRDS-Location'] = absolute_url(:user_xrds, {:id => params[:id]})
