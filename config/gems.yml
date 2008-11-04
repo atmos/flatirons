@@ -30,50 +30,50 @@ gems:
     require: extlib
 
   - name: merb-core
-    version: '=0.9.12'
+    version: '=0.9.13'
     require: merb-core
   
   - name: merb-gen
-    version: '=0.9.12'
+    version: '=0.9.13'
 
   - name: merb-param-protection
-    version: '=0.9.12'
+    version: '=0.9.13'
     require: merb-param-protection
 
   - name: merb-haml
-    version: '=0.9.12'
+    version: '=0.9.13'
     require: merb-haml
     
   - name: merb-auth-core
-    version: '=0.9.12'
+    version: '=0.9.13'
     require: merb-auth-core
 
   - name: merb-auth-more
-    version: '=0.9.12'
+    version: '=0.9.13'
     require: merb-auth-more
     
   - name: merb-auth-slice-password
-    version: '=0.9.12'
+    version: '=0.9.13'
     require: merb-auth-slice-password
     
   - name: merb-cache
-    version: '=0.9.12'
+    version: '=0.9.13'
     require: merb-cache
   
   - name: merb-helpers
-    version: '=0.9.12'
+    version: '=0.9.13'
     require: merb-helpers
 
   - name: merb-assets
-    version: '=0.9.12'
+    version: '=0.9.13'
     require: merb-assets
     
   - name: merb-slices
-    version: '=0.9.12'
+    version: '=0.9.13'
     require: merb-slices
 
   - name: merb-action-args
-    version: '=0.9.12'
+    version: '=0.9.13'
     require: merb-action-args
 
   - name: merb_datamapper
@@ -105,3 +105,6 @@ gems:
 
   - name: ruby-openid
     version: '=2.1.2'
+
+  - name: nokogiri
+    version: '=1.0.3'
