@@ -25,7 +25,9 @@ Merb::BootLoader.before_app_loads do
   require 'openid/store/filesystem'
   # This will get executed after dependencies have been loaded but before your app's classes have loaded.
 end
- 
+
+Merb.add_mime_type(:xrds, :to_xrds, %w[application/xrds+xml], "Content-Encoding" => "gzip")
+
 Merb::BootLoader.after_app_loads do
   DataMapper.auto_migrate!
   User.create(:login => 'atmoose', :email => 'atmos@atmos.org', :password => 'foo', :password_confirmation => 'foo', :identity_url => 'http://localhost:4001/users/atmoose')

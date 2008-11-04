@@ -47,6 +47,9 @@ describe Servers, "#decision" do
         
         @response = dispatch_to(Servers, :decision, {:yes => :yes}) do |controller|
           mock(controller.session).delete(:last_oidreq) { @check_id_request }
+          %w(notice authentication_strategies return_to).each do |k|
+            mock(controller.session).delete(k) { nil }
+          end
         end
       end
       it "should be successful" do

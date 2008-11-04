@@ -56,9 +56,11 @@ class Servers < Application
       end
       if session[:approvals]
         session[:approvals] << oidreq.trust_root
+        session[:approvals].uniq!
       else
         session[:approvals] = [oidreq.trust_root]
       end
+
       
       oidresp = oidreq.answer(true, nil, identity)
       add_sreg(oidreq, oidresp)
@@ -67,6 +69,7 @@ class Servers < Application
   end
   
   def users_page(id)
+    provides :xrds, :html
     # Yadis content-negotiation: we want to return the xrds if asked for.
     accept = request.env['HTTP_ACCEPT']
 

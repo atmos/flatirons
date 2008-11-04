@@ -35,7 +35,7 @@ module Merb
     
     def add_sreg(oidreq, oidresp)
       user = User.first(:identity_url => oidreq.identity)
-      return if user.nil?
+      return if user.nil? #FAIL
       sreg_data = {
         'nickname' => user.login,
         'email'    => user.email
@@ -55,6 +55,10 @@ module Merb
         web_response.body
 
       when 302
+        %w(notice authentication_strategies return_to).each do |session_key|
+          session.delete(session_key)
+        end
+        Merb.logger.info! session.inspect
         redirect web_response.headers['location']
       else
         web_response.body
@@ -87,22 +91,7 @@ module Merb
       types.each { |uri|
         type_str += "<Type>#{uri}</Type>\n      "
       }
-
-      yadis = <<EOS
-<?xml version="1.0" encoding="UTF-8"?>
-<xrds:XRDS
-    xmlns:xrds="xri://$xrds"
-    xmlns="xri://$xrd*($v*2.0)">
-  <XRD>
-    <Service priority="0">
-      #{type_str}
-      <URI>#{absolute_url(:servers)}</URI>
-    </Service>
-  </XRD>
-</xrds:XRDS>
-EOS
-
-      yadis
+      partial :yadis, :type_str => type_str
     end
   end
 end # Merb
