@@ -30,50 +30,50 @@ gems:
     require: extlib
 
   - name: merb-core
-    version: '=0.9.13'
+    version: '=1.0'
     require: merb-core
   
   - name: merb-gen
-    version: '=0.9.13'
+    version: '=1.0'
 
   - name: merb-param-protection
-    version: '=0.9.13'
+    version: '=1.0'
     require: merb-param-protection
 
   - name: merb-haml
-    version: '=0.9.13'
+    version: '=1.0'
     require: merb-haml
     
   - name: merb-auth-core
-    version: '=0.9.13'
+    version: '=1.0'
     require: merb-auth-core
 
   - name: merb-auth-more
-    version: '=0.9.13'
+    version: '=1.0'
     require: merb-auth-more
     
   - name: merb-auth-slice-password
-    version: '=0.9.13'
+    version: '=1.0'
     require: merb-auth-slice-password
     
   - name: merb-cache
-    version: '=0.9.13'
+    version: '=1.0'
     require: merb-cache
   
   - name: merb-helpers
-    version: '=0.9.13'
+    version: '=1.0'
     require: merb-helpers
 
   - name: merb-assets
-    version: '=0.9.13'
+    version: '=1.0'
     require: merb-assets
     
   - name: merb-slices
-    version: '=0.9.13'
+    version: '=1.0'
     require: merb-slices
 
   - name: merb-action-args
-    version: '=0.9.13'
+    version: '=1.0'
     require: merb-action-args
 
   - name: merb_datamapper
@@ -108,3 +108,6 @@ gems:
 
   - name: nokogiri
     version: '=1.0.3'
+
+  - name: webrat
+    version: '=0.3.2'
