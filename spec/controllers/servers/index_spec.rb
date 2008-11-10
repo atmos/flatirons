@@ -17,7 +17,6 @@ shared_examples_for "successful authorization and redirection to the consumer" d
     @response.body.should match(%r!href="http://localhost?.*"!)
   end
 
-  it "should set the appropriate headers on redirect"
 end
 
 describe Servers, "#index" do
@@ -102,6 +101,7 @@ describe Servers, "#index" do
           end
         end
         it_should_behave_like "successful authorization and redirection to the consumer"
+        it "should set the appropriate headers on redirect"
       end
 
       describe "set to false" do
