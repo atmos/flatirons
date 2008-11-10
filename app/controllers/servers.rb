@@ -82,6 +82,16 @@ class Servers < Application
     render :layout => false
   end
   
+  def idp_page(id)
+    provides :xrds
+    @types = [
+             OpenID::OPENID_2_0_TYPE,
+             OpenID::OPENID_1_0_TYPE,
+             OpenID::SREG_URI,
+            ]
+    render :layout => false
+  end
+  
   def acceptance(message="Do you trust this site with your identity?")
     @oidreq = session[:last_oidreq]
 

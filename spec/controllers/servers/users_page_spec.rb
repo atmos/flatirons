@@ -38,4 +38,9 @@ describe Servers do
       @response.headers["X-XRDS-Location"].should == "http://localhost/users/atmos/xrds"
     end
   end
+  
+  it "should handle routing for /users/atmos/xrds properly" do
+    request_to("/users/atmos/xrds", :get, {:http_accept => 'application/xrds+xml'}).
+      should route_to(Servers, :users_page).with(:id => 'atmos')
+  end
 end
