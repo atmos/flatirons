@@ -1,4 +1,5 @@
 require File.join(File.dirname(__FILE__), '..', '..', 'spec_helper.rb')
+
 shared_examples_for "redirecting to the acceptance page" do
   it "should return http success" do
     @response.status.should == 302
@@ -7,6 +8,7 @@ shared_examples_for "redirecting to the acceptance page" do
     @response.should have_xpath("//a[@href='/servers/acceptance']")
   end
 end
+
 shared_examples_for "successful authorization and redirection to the consumer" do
   it "should return http redirect" do
     @response.status.should == 302
@@ -14,7 +16,19 @@ shared_examples_for "successful authorization and redirection to the consumer" d
   it "should redirect back to the site requesting auth" do
     @response.body.should match(%r!href="http://localhost?.*"!)
   end
-  it "should set the appropriate headers on redirect"
+
+  describe " returned query parameters" do
+    before(:each) do
+      @redirect_params = query_parse(Addressable::URI.parse(@response.headers['Location']).query)
+    end
+    %w(claimed_id identity mode op_endpoint sreg.email sreg.nickname).each do |k|
+      it "should include openid.#{k}" do
+        pending
+        @redirect_params["openid.#{k}"].should_not be_nil
+      end
+    end
+    it "should set the appropriate headers on redirect"
+  end
 end
 
 describe Servers, "index action" do
@@ -73,15 +87,15 @@ describe Servers, "index action" do
       before(:each) do
         @message = OpenID::Message.new('http://specs.openid.net/auth/2.0')        
         @check_id_request.message = @message
-      
+
         @check_id_response = OpenID::Server::OpenIDResponse.new(@check_id_request)
-      
+
       end
       describe "set to true" do
         before(:each) do
           mock(@check_id_request).answer(false, '/servers') { @check_id_response }
           mock(@check_id_request).immediate { true }
-    
+
           @response = dispatch_to(Servers, :index, @params) do |controller|
             stub(controller).session { {:username => 'atmos'} }
             mock(controller).authorized?(@params['openid.identity'], @params['openid.return_to']) { false }
@@ -89,11 +103,11 @@ describe Servers, "index action" do
         end
         it_should_behave_like "successful authorization and redirection to the consumer"
       end
-    
+
       describe "set to false" do
         before(:each) do
           mock(@check_id_request).immediate { false }
-    
+
           @response = dispatch_to(Servers, :index, @params) do |controller|
             stub(controller).session { {:username => 'atmos'} }
             mock(controller).authorized?(@params['openid.identity'], @params['openid.return_to']) { false }

@@ -61,7 +61,6 @@ class Servers < Application
         session[:approvals] = [oidreq.trust_root]
       end
 
-      
       oidresp = oidreq.answer(true, nil, identity)
       add_sreg(oidreq, oidresp)
     end
