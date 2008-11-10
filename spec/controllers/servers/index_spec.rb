@@ -75,7 +75,7 @@ describe Servers, "#index" do
           @redirect_params = query_parse(Addressable::URI.parse(@response.headers['Location']).query)
         end
 
-        %w(ns ns.sreg sreg.nickname sreg.email claimed_id identity mode op_endpoint assoc_handle signed).each do |k|
+        %w(ns ns.sreg sreg.nickname sreg.email claimed_id identity mode op_endpoint assoc_handle response_nonce signed).each do |k|
           it "should include openid.#{k}" do
             @redirect_params["openid.#{k}"].should_not be_nil
           end
