@@ -19,7 +19,7 @@ class Servers < Application
       elsif authorized?(identity, oidreq.trust_root)
         oidresp = oidreq.answer(true, nil, identity)
         add_sreg(oidreq, oidresp)
-
+        
       elsif oidreq.immediate
         oidresp = oidreq.answer(false, url(:servers))
       else

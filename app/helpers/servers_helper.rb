@@ -21,7 +21,7 @@ module Merb
     end
     
     def authorized?(identity_url, trust_root)
-      return (session[:username] and (identity_url == url_for_user) and approved(trust_root))
+      return (session[:username] and (identity_url == url(:users, {:id => session[:username]})) and approved(trust_root))
     end
     
     def approved(trust_root)
