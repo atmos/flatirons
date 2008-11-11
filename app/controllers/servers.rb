@@ -14,9 +14,7 @@ class Servers < Application
     if oidreq.kind_of?(CheckIDRequest)
       identity = oidreq.identity
 
-      if oidresp
-        nil
-      elsif authorized?(identity, oidreq.trust_root)
+      if authorized?(identity, oidreq.trust_root)
         oidresp = oidreq.answer(true, nil, identity)
         add_sreg(oidreq, oidresp)
         

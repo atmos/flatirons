@@ -20,3 +20,4 @@ src/*
 .hgignore
 .hg/*
 .svn/*
+coverage/*

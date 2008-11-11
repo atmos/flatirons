@@ -54,14 +54,5 @@ module Merb
         web_response.body
       end
     end
-
-    def idp_xrds
-      types = [
-               OpenID::OPENID_IDP_2_0_TYPE,
-              ]
-
-      headers['content-type'] = 'application/xrds+xml'
-      partial :yadis, :types => types
-    end
   end
 end # Merb

@@ -33,3 +33,15 @@ task :default => 'spec'
 # ADD YOUR CUSTOM TASKS IN /lib/tasks
 # NAME YOUR RAKE FILES file_name.rake
 ##############################################################################
+namespace :spec do
+  Spec::Rake::SpecTask.new(:ci) do |t|
+    t.spec_opts << %w(-fs --color) << %w(-O spec/spec.opts)
+    t.spec_opts << '--loadby' << 'random'
+    t.spec_files = %w(controllers models helpers views).collect { |dir| Dir["spec/#{dir}/**/*_spec.rb"] }.flatten
+    t.rcov = ENV.has_key?('NO_RCOV') ? ENV['NO_RCOV'] != 'true' : true
+    t.rcov_opts << '--exclude' << 'spec,exceptions,schema,gems/gems,merb/merb-auth'
+    t.rcov_opts << '--text-summary'
+    t.rcov_opts << '--sort' << 'coverage' << '--sort-reverse'
+    t.rcov_opts << '--only-uncovered'
+  end
+end
