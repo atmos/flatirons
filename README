@@ -30,8 +30,20 @@ In Production
 -------------
 tbd
 
-Help/Guidance
+Diagrams
+--------
+http://blogs.sun.com/bblfish/entry/the_openid_sequence_diagram
+http://framework.zend.com/wiki/download/attachments/34110/openid.jpg
+http://www.cl.cam.ac.uk/users/sjm217/misc/openid-protocol.pdf
+
+OpenID Tester
 -------------
+http://www.openidenabled.com/resources/openid-test/
+
+Guidance
+-------------
+http://openid.net/specs/openid-authentication-2_0.html
+http://wiki.openid.net/OpenID_Authentication_2.0
+
 http://jystewart.net/process/2007/10/a-ruby-on-rails-openid-server/
 http://lists.openidenabled.com/pipermail/dev/2007-March/000347.html
-http://openid.net/specs/openid-authentication-2_0.html
