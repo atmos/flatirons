@@ -4,13 +4,32 @@ flatirons
 This is a little merb app that serves as an openid provider.  The rails provider
 app inside of the ruby-openid gem is dated and has 0 specs.  I needed one at work
 today and it seemed best to learn the code by specing as I go.  This works w/
-merb 0.9.10.
+merb 1.0.
 
-Requirements
+Requirements (UNIX)
+-------------------
+% script/update
+
+On Localhost
 ------------
-% sudo gem install merb ruby-openid rr rspec
+% script/merb -p 4001
+To connect to this you're going to need a user, we can't register them yet though. :\
+Have your browser redirect to http://localhost:4001/users/:id
+The development environment has a user 'atmoose' 
+  with email 'atmoose@atmos.com' 
+  with password 'foo' 
+  it's useful for testing clients
+
+In Staging
+----------
+tbd
+
+In Production
+-------------
+tbd
 
 Help/Guidance
 -------------
 http://jystewart.net/process/2007/10/a-ruby-on-rails-openid-server/
 http://lists.openidenabled.com/pipermail/dev/2007-March/000347.html
+http://openid.net/specs/openid-authentication-2_0.html

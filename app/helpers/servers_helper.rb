@@ -55,4 +55,4 @@ module Merb
       end
     end
   end
-end # Merb
+end
