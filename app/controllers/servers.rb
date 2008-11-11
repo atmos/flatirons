@@ -13,7 +13,7 @@ class Servers < Application
     
     if oidreq.kind_of?(CheckIDRequest)
       identity = oidreq.identity
-      
+
       if oidresp
         nil
       elsif authorized?(identity, oidreq.trust_root)
@@ -40,7 +40,7 @@ class Servers < Application
       Merb.logger.info("Cancelling OpenID Authentication")
       return(redirect(oidreq.cancel_url))
     else
-      # id_to_send = session.user.login
+      id_to_send = session.user.login
 
       identity = oidreq.identity
 

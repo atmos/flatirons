@@ -14,8 +14,12 @@ describe Servers, "#decision" do
       it "redirects to the cancel url" do
         response = request("/servers/decision?yes=yes", {'REQUEST_METHOD' => 'POST'})
         response.status.should == 302
+        
+        redirect_params = query_parse(Addressable::URI.parse(response.headers['Location']).query)
+        %w(sreg.nickname sreg.email mode op_endpoint assoc_handle response_nonce signed).each do |k|
+          redirect_params["openid.#{k}"].should_not be_nil
+        end
       end
-      it "should test in greater detail the redirect query string"
       it "should handle multiple identities better via oidreq.id_select"
     end
   end

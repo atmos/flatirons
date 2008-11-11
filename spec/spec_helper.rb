@@ -35,17 +35,29 @@ Spec::Runner.configure do |config|
 end
 
 given "an authenticated user" do
-  @user =  User.create(:login => 'atmoose', :email => 'atmos@atmos.org', :password => 'foo', :password_confirmation => 'foo', :identity_url => 'http://localhost/users/atmoose')
+  @user =  User.create(:login => 'atmoose', :email => 'atmos@atmos.org', :password => 'foo', :password_confirmation => 'foo', :identity_url => 'http://example.org/users/atmos')
   response = request "/login", :method => "PUT", :params => { :email => @user.email, :password => 'foo' }
   response.should redirect_to("/")
 end
 
 given "an authenticated user requesting auth" do
-  @user =  User.create(:login => 'atmoose', :email => 'atmos@atmos.org', :password => 'foo', :password_confirmation => 'foo', :identity_url => 'http://localhost/users/atmoose')
+  @user =  User.create(:login => 'atmoose', :email => 'atmos@atmos.org', :password => 'foo', :password_confirmation => 'foo', :identity_url => 'http://example.org/users/atmos')
   params =  {"openid.mode"=>"checkid_setup", "openid.return_to" => 'http://consumerapp.com/',
                    'openid.identity' => 'http://example.org/users/atmos',
                    'openid.claimed_id' => 'http://example.org/users/atmos'}
   request("/servers", :params => params)
   response = request "/login", :method => "PUT", :params => { :email => @user.email, :password => 'foo' }
   response.should redirect_to("/")
+end
+
+given 'an returning user with trusted hosts in their session' do
+  @user =  User.create(:login => 'atmoose', :email => 'atmos@atmos.org', :password => 'foo', :password_confirmation => 'foo', :identity_url => 'http://example.org/users/atmos')
+  params =  {"openid.mode"=>"checkid_setup", "openid.return_to" => 'http://consumerapp.com/',
+                   'openid.identity' => 'http://example.org/users/atmos',
+                   'openid.claimed_id' => 'http://example.org/users/atmos'}
+  request("/servers", :params => params)
+  response = request "/login", :method => "PUT", :params => { :email => @user.email, :password => 'foo' }
+  response.should redirect_to("/")
+  response = request("/servers/decision?yes=yes", {'REQUEST_METHOD' => 'POST'})
+  response.status.should == 302
 end
