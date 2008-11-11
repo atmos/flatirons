@@ -32,16 +32,22 @@ Spec::Runner.configure do |config|
     end
     preserve_order ? query : query.to_mash
   end
+  def setup_user
+    @user =  User.create(:login => 'atmoose', :email => 'atmos@atmos.org', :password => 'foo', :password_confirmation => 'foo', :identity_url => 'http://example.org/users/atmos')
+  end
+  def login_user
+    response = request "/login", :method => "PUT", :params => { :email => @user.email, :password => 'foo' }
+    response.should redirect_to("/")
+  end
 end
 
 given "an authenticated user" do
-  @user =  User.create(:login => 'atmoose', :email => 'atmos@atmos.org', :password => 'foo', :password_confirmation => 'foo', :identity_url => 'http://example.org/users/atmos')
-  response = request "/login", :method => "PUT", :params => { :email => @user.email, :password => 'foo' }
-  response.should redirect_to("/")
+  setup_user
+  login_user
 end
 
 given "an authenticated user requesting auth" do
-  @user =  User.create(:login => 'atmoose', :email => 'atmos@atmos.org', :password => 'foo', :password_confirmation => 'foo', :identity_url => 'http://example.org/users/atmos')
+  setup_user
   params =  {"openid.mode"=>"checkid_setup", "openid.return_to" => 'http://consumerapp.com/',
                    'openid.identity' => 'http://example.org/users/atmos',
                    'openid.claimed_id' => 'http://example.org/users/atmos'}
@@ -51,7 +57,7 @@ given "an authenticated user requesting auth" do
 end
 
 given 'an returning user with trusted hosts in their session' do
-  @user =  User.create(:login => 'atmoose', :email => 'atmos@atmos.org', :password => 'foo', :password_confirmation => 'foo', :identity_url => 'http://example.org/users/atmos')
+  setup_user
   params =  {"openid.mode"=>"checkid_setup", "openid.return_to" => 'http://consumerapp.com/',
                    'openid.identity' => 'http://example.org/users/atmos',
                    'openid.claimed_id' => 'http://example.org/users/atmos'}

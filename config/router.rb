@@ -33,12 +33,13 @@ Merb::Router.prepare do
   # Adds the required routes for merb-auth using the password slice
   slice(:merb_auth_slice_password, :name_prefix => nil, :path_prefix => "")
 
+  email_regex = /[^\/]+/
   match("/servers").to(:controller => 'servers').name('servers')
   match("/servers/xrds").to(:controller => 'servers', :action => :idp_page).name('xrds')
   match("/servers/acceptance").to(:controller => 'servers', :action => 'acceptance').name('acceptance')
   match("/servers/decision").to(:controller => 'servers', :action => 'decision').name('server_decision')
-  match("/users/:id").to(:controller => :users, :action => :show).name('user')
-  match("/users/:id/xrds").to(:controller => :users, :action => :show).name("user_xrds")
+  match("/users/:email", :email => email_regex).to(:controller => :users, :action => :show).name('user')
+  match("/users/:email/xrds", :email => email_regex).to(:controller => :users, :action => :show).name("user_xrds")
 
   # This is the default route for /:controller/:action/:id
   # This is fine for most cases.  If you're heavily using resource-based
