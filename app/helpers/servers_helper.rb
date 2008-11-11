@@ -9,16 +9,6 @@ module Merb
       end
       return @server
     end
-
-    def show_decision_page(oidreq, message="Do you trust this site with your identity?")
-      session[:last_oidreq] = oidreq
-      @oidreq = oidreq
-
-      if message
-        session[:notice] = message
-      end
-      partial 'decide'
-    end
     
     def authorized?(identity_url, trust_root)
       return (session[:user] and (identity_url == url_for_user) and approved(trust_root))
