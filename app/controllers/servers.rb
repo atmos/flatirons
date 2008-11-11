@@ -5,7 +5,7 @@ class Servers < Application
   # goes to the client...
   def index
     oidreq = session[:last_oidreq].nil? ? server.decode_request(params) : session[:last_oidreq]
-    
+
     # no openid.mode was given, FIXME I've yet to see this case hit
     return("This is an OpenID server endpoint.") unless oidreq
     
@@ -34,7 +34,7 @@ class Servers < Application
   end
 
   def decision
-    oidreq = session.delete(:last_oidreq)
+    oidreq = session[:last_oidreq]
 
     if params[:yes].nil?
       Merb.logger.info("Cancelling OpenID Authentication")
@@ -43,6 +43,7 @@ class Servers < Application
       id_to_send = params[:id_to_send]
 
       identity = oidreq.identity
+
       if oidreq.id_select
         if id_to_send and id_to_send != ""
           session[:username] = id_to_send
@@ -64,6 +65,7 @@ class Servers < Application
       oidresp = oidreq.answer(true, nil, identity)
       add_sreg(oidreq, oidresp)
     end
+
     render_response(oidresp)
   end
   
@@ -93,6 +95,8 @@ class Servers < Application
   
   def acceptance(message="Do you trust this site with your identity?")
     @oidreq = session[:last_oidreq]
+
+    return redirect(url(:user, {:id => session[:username]})) if @oidreq.nil?
 
     if message
       session[:notice] = message

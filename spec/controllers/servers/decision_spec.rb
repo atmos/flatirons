@@ -30,7 +30,7 @@ describe Servers, "#decision" do
     describe "cancel" do
       before(:each) do
         @response = dispatch_to(Servers, :decision, {:cancel => :cancel}) do |controller|
-          mock(controller.session).delete(:last_oidreq) { @check_id_request }
+          mock(controller.session).[](:last_oidreq) { @check_id_request }
         end
       end
       it "should redirect the user" do
@@ -46,7 +46,8 @@ describe Servers, "#decision" do
         mock(@check_id_request).answer(true, nil, 'http://openid.goatse.cx/users/atmos') { @check_id_response }
         
         @response = dispatch_to(Servers, :decision, {:yes => :yes}) do |controller|
-          mock(controller.session).delete(:last_oidreq) { @check_id_request }
+          mock(controller.session).[](:last_oidreq) { @check_id_request }
+          mock(controller.session).[](:approvals).times(any_times) { [] }
           %w(notice authentication_strategies return_to).each do |k|
             mock(controller.session).delete(k) { nil }
           end

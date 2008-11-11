@@ -33,3 +33,19 @@ Spec::Runner.configure do |config|
     preserve_order ? query : query.to_mash
   end
 end
+
+given "an authenticated user" do
+  @user =  User.create(:login => 'atmoose', :email => 'atmos@atmos.org', :password => 'foo', :password_confirmation => 'foo', :identity_url => 'http://localhost/users/atmoose')
+  response = request "/login", :method => "PUT", :params => { :email => @user.email, :password => 'foo' }
+  response.should redirect_to("/")
+end
+
+given "an authenticated user requesting auth" do
+  @user =  User.create(:login => 'atmoose', :email => 'atmos@atmos.org', :password => 'foo', :password_confirmation => 'foo', :identity_url => 'http://localhost/users/atmoose')
+  params =  {"openid.mode"=>"checkid_setup", "openid.return_to" => 'http://consumerapp.com/',
+                   'openid.identity' => 'http://example.org/users/atmos',
+                   'openid.claimed_id' => 'http://example.org/users/atmos'}
+  request("/servers", :params => params)
+  response = request "/login", :method => "PUT", :params => { :email => @user.email, :password => 'foo' }
+  response.should redirect_to("/")
+end
