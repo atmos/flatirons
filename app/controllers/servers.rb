@@ -1,13 +1,15 @@
 class Servers < Application
   before :ensure_authenticated, :only => [:acceptance]
   include OpenID::Server
-  # ...and remember, everything returned from an action
-  # goes to the client...
-  def index
-    oidreq = session[:last_oidreq].nil? ? server.decode_request(params) : session[:last_oidreq]
 
-    # no openid.mode was given, FIXME I've yet to see this case hit
-    return("This is an OpenID server endpoint.") unless oidreq
+  def index
+    begin
+      oidreq = server.decode_request(params)
+    rescue OpenID::Server::ProtocolError => e
+      Merb.logger.info e.message
+      oidreq = session[:last_oidreq]
+      return render
+    end
     
     oidresp = nil
     
@@ -17,7 +19,7 @@ class Servers < Application
       if authorized?(identity, oidreq.trust_root)
         oidresp = oidreq.answer(true, nil, identity)
         add_sreg(oidreq, oidresp)
-        
+
       elsif oidreq.immediate
         oidresp = oidreq.answer(false, url(:servers))
       else
@@ -64,20 +66,6 @@ class Servers < Application
       add_sreg(oidreq, oidresp)
     end
     render_response(oidresp)
-  end
-  
-  def users_page(id)
-    provides :xrds, :html
-
-    @types = [
-             OpenID::OPENID_2_0_TYPE,
-             OpenID::OPENID_1_0_TYPE,
-             OpenID::SREG_URI,
-            ]
-    # content negotiation failed, so just render the user page
-    # Also add the Yadis location header, so that they don't have
-    headers['X-XRDS-Location'] = absolute_url(:user_xrds, {:id => params[:id]})
-    render :layout => false
   end
   
   def idp_page(id = nil)

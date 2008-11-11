@@ -20,7 +20,7 @@ module Merb
     end
     
     def url_for_user
-      url(:users, {:id => session.user.login})
+      "/users/#{session.user.login}"
     end
     
     def add_sreg(oidreq, oidresp)

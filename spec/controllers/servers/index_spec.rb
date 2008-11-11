@@ -2,15 +2,17 @@ require File.join(File.dirname(__FILE__), '..', '..', 'spec_helper.rb')
 
 describe Servers, "#index" do
   describe "empty params" do
-    it "should raise errors" do
+    it "should let you know about the flatirons(users shouldn't ever hit this but you can customize it)" do
       response = request("/servers")
-      response.status.should == 500
+      response.should be_successful
+      response.should have_xpath("//p/a[@href='http://www.powerset.com/explore/semhtml/Flatirons?query=what+are+the+flatirons']")
+      response.should have_xpath("//p/a[@href='http://github.com/atmos/flatirons/tree/master']")
     end
   end
 
   describe " with openid parameters and authorized", :given => 'an returning user with trusted hosts in their session' do
     it "should redirect back to the consumer app with the appropriate query string" do
-      params =  {"openid.mode"       =>"checkid_setup", 
+      params =  {"openid.mode"       => "checkid_setup", 
                  "openid.return_to"  => 'http://consumerapp.com/',
                  'openid.identity'   => 'http://example.org/users/atmos',
                  'openid.claimed_id' => 'http://example.org/users/atmos'}
@@ -29,9 +31,9 @@ describe Servers, "#index" do
     end
   end
   
-  describe "with openid parameters but unauthorized", :given => 'an authenticated user' do
-    it "should redirect to the acceptance page" do
-      params =  {"openid.mode"       =>"checkid_setup", 
+  describe "with openid parameters but unauthorized" do
+    it "should redirect to the acceptance page(and /login if needed)" do
+      params =  {"openid.mode"       => "checkid_setup", 
                  "openid.return_to"  => 'http://consumerapp.com/',
                  'openid.identity'   => 'http://example.org/users/atmos',
                  'openid.claimed_id' => 'http://example.org/users/atmos'}
@@ -42,7 +44,7 @@ describe Servers, "#index" do
   
   describe "with openid mode of immediate", :given => 'an authenticated user' do
     it "should redirect to the client with a user_setup_url" do
-      params =  {"openid.mode"       =>"checkid_immediate", 
+      params =  {"openid.mode"       => "checkid_immediate", 
                  "openid.return_to"  => 'http://consumerapp.com/',
                  'openid.identity'   => 'http://example.org/users/atmos',
                  'openid.claimed_id' => 'http://example.org/users/atmos'}
@@ -54,6 +56,5 @@ describe Servers, "#index" do
         redirect_params["openid.#{k}"].should_not be_nil
       end
     end
-    
   end
 end

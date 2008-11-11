@@ -8,7 +8,7 @@ describe Servers do
     end
   end
   describe "#acceptance", :given => 'an authenticated user requesting auth' do
-    it "should return HTTP redirect" do
+    it "should return HTTP success and display the acceptance form" do
       response = request("/servers/acceptance")
       response.should be_successful
       response.should have_xpath("//form[@action='/servers/decision' and @method='post']")
