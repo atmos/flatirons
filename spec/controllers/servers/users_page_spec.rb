@@ -1,41 +1,27 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
 
 describe Servers do
-  before(:each) do
-    User.all.destroy!
-    User.create(:login => 'atmos', :email => 'atmos@atmos.org', :identity_url => 'http://localhost/users/atmos', :password => 'zomgwtfbbq', :password_confirmation => 'zomgwtfbbq')    
-  end
   
   describe "accepting xrds+xml" do
-    before(:each) do
-      @response = dispatch_to(Servers, :users_page, {:id => User.first.login}, {:http_accept => 'application/xrds+xml'})
-    end
-    it "should return http success" do
-      @response.should be_successful
-    end
-    it "match this response body" do
-      @response.body.should match(%r!<URI>http://localhost/servers</URI>!)
-    end
-    it "has the X-XRDS-Location header set properly" do
-      @response.headers["X-XRDS-Location"].should == "http://localhost/users/atmos/xrds"
+    it "should return the user's identity page" do
+      response = request("/users/atmos", {'HTTP_ACCEPT' => 'application/xrds+xml'})
+      response.should be_successful
+      response.headers["X-XRDS-Location"].should == "http://example.org/users/atmos/xrds"
+      response.body.should have_xpath("//xrd/service[uri='http://example.org/servers']")
+      response.body.should have_xpath("//xrd/service[type='http://specs.openid.net/auth/2.0/signon']")
+      response.body.should have_xpath("//xrd/service[type='http://openid.net/signon/1.0']")
+      response.body.should have_xpath("//xrd/service[type='http://openid.net/sreg/1.0']")
     end
   end
-  
+
   describe "accepting text/html" do
-    before(:each) do
-      @response = dispatch_to(Servers, :users_page, {:id => User.first.login})
-    end
-    it "should return http success" do
-      @response.should be_successful
-    end
-    it "have the openid provider in the response" do
-      @response.body.should have_xpath("//link[@rel='openid.server' and @href='http://localhost/servers']")
-    end
-    it "have the user xrds location in the response body" do
-      @response.body.should have_xpath("//meta[@http-equiv='X-XRDS-Location' and @content='http://localhost/users/#{User.first.login}/xrds']")
-    end
-    it "has the X-XRDS-Location header set properly" do
-      @response.headers["X-XRDS-Location"].should == "http://localhost/users/atmos/xrds"
+    it "should return the user's identity page" do
+      response = request("/users/atmos")
+      response.should be_successful
+      response.body.should have_xpath("//link[@rel='openid.server' and @href='http://example.org/servers']")
+      response.body.should have_xpath("//meta[@http-equiv='X-XRDS-Location' and @content='http://example.org/users/atmos/xrds']")
+      response.body.should have_xpath("//body[p='OpenID identity page for atmos']")
+      response.headers["X-XRDS-Location"].should == "http://example.org/users/atmos/xrds"
     end
   end
   
