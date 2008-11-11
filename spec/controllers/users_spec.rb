@@ -27,7 +27,7 @@ describe Users, "#show" do
     end
   end
   
-  it "should handle routing for /users/atmos/xrds properly" do
+  it "should handle routing for /users/atmos@atmos.org/xrds properly" do
     request_to("/users/atmos@atmos.org/xrds", :get, {:http_accept => 'application/xrds+xml'}).
       should route_to(Users, :show).with(:email => 'atmos@atmos.org')
   end

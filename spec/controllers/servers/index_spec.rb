@@ -57,4 +57,28 @@ describe Servers, "#index" do
       end
     end
   end
+  describe "with openid mode of associate" do
+    it "should redirect to the client with a user_setup_url" do
+      params =  {"openid.mode"         => "associate",
+                 "openid.session_type" => 'DH-SHA1',
+                 "openid.assoc_type"   => 'HMAC-SHA1',
+                 "openid.dh_consumer_public"=>"LXkAlLpfrKNX7+Pu6oKs/x1ca+zjPz/kRFpaFo+h9XnryEGcMmcF0e4ce2QlGRC4sseupPbRetrptTYJBWtclVg3Ton4KT8ePxcTJqtZ5Q6a4GXQxdFPLlmhZpFsXp8ik2Y487Ko9WMdM7hctitFV4Czm5bSpR/YXPbLwqDQg48="}
+
+      response = request("/servers", :params => params)
+      response.should be_successful
+      
+      body = response.body.to_s.split(/\n/).inject({}) do |sum, part|
+        k, v = part.split(/:/)
+        sum[k] = v
+        sum
+      end
+      
+      body.should_not be_nil
+      body['assoc_type'].should       == 'HMAC-SHA1'
+      body['assoc_handle'].should     =~ %r!\{HMAC-SHA1\}\{\w{8}\}\{[^\]]{8}!
+      body['session_type'].should     == 'DH-SHA1'
+      body['enc_mac_key'].size.should == 28
+      body['dh_server_public']        == 'W9Orfz0HHHnqDl74gCj35FIE6gyR7WY+T4qEoufMSgjKP+40mUyNS8rzLw5ghUGHMd+NojgU1aWWVOQ5RCaz0d7qvix1xx2UZpFaLi+vEpcgLputRVkROeMWglvbAZbySA0mJ20vx5Qyu0gs3GtuWlM4StGHI2EoCou/V7CDVc='
+    end
+  end
 end
