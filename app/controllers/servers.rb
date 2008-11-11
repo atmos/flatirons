@@ -40,21 +40,21 @@ class Servers < Application
       Merb.logger.info("Cancelling OpenID Authentication")
       return(redirect(oidreq.cancel_url))
     else
-      id_to_send = params[:id_to_send]
+      # id_to_send = session.user.login
 
       identity = oidreq.identity
 
-      if oidreq.id_select
-        if id_to_send and id_to_send != ""
-          session[:username] = id_to_send
-          session[:approvals] = []
-          identity = url(:user, {:id => id_to_send})
-        else
-          msg = "You must enter a username to in order to send " +
-            "an identifier to the Relying Party."
-          return show_decision_page(oidreq, msg)
-        end
-      end
+      # if oidreq.id_select
+      #   if id_to_send and id_to_send != ""
+      #     session[:username] = id_to_send
+      #     session[:approvals] = []
+      #     identity = url(:user, {:id => id_to_send})
+      #   else
+      #     msg = "You must enter a username to in order to send " +
+      #       "an identifier to the Relying Party."
+      #     return show_decision_page(oidreq, msg)
+      #   end
+      # end
       if session[:approvals]
         session[:approvals] << oidreq.trust_root
         session[:approvals].uniq!
@@ -65,7 +65,6 @@ class Servers < Application
       oidresp = oidreq.answer(true, nil, identity)
       add_sreg(oidreq, oidresp)
     end
-
     render_response(oidresp)
   end
   

@@ -16,5 +16,4 @@ describe Servers, "#idp_page" do
     request_to("/servers/xrds", :get, {:http_accept => 'application/xrds+xml'}).
       should route_to(Servers, :idp_page)
   end
-
 end
