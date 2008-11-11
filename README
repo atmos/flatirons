@@ -19,6 +19,8 @@ The development environment has a user 'atmoose'
   with email 'atmoose@atmos.com' 
   with password 'foo' 
   it's useful for testing clients
+  
+A client should hit 'http://localhost:4001/users/atmoose
 
 In Staging
 ----------
