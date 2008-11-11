@@ -83,7 +83,7 @@ class Servers < Application
     render :layout => false
   end
   
-  def idp_page(id)
+  def idp_page(id = nil)
     provides :xrds
     @types = [
              OpenID::OPENID_2_0_TYPE,

@@ -34,7 +34,7 @@ Merb::Router.prepare do
   slice(:merb_auth_slice_password, :name_prefix => nil, :path_prefix => "")
 
   match("/servers").to(:controller => 'servers').name('servers')
-  match("/servers/xrds").to(:controller => 'servers', :action => :idp_xrds).name('xrds')
+  match("/servers/xrds").to(:controller => 'servers', :action => :idp_page).name('xrds')
   match("/servers/acceptance").to(:controller => 'servers', :action => 'acceptance').name('acceptance')
   match("/servers/decision").to(:controller => 'servers', :action => 'decision').name('server_decision')
   match("/users/:id").to(:controller => :servers, :action => :users_page)
