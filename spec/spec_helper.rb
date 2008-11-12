@@ -33,10 +33,10 @@ Spec::Runner.configure do |config|
     preserve_order ? query : query.to_mash
   end
   def setup_user
-    @user =  User.create(:login => 'atmoose', :email => 'atmos@atmos.org', :password => 'foo', :password_confirmation => 'foo', :identity_url => 'http://example.org/users/atmos')
+    @user =  User.create(:login => 'atmoose', :email => 'atmos@atmos.org', :password => 'foo', :password_confirmation => 'foo')
   end
   def login_user
-    response = request "/login", :method => "PUT", :params => { :email => @user.email, :password => 'foo' }
+    response = request "/login", :method => "PUT", :params => { :email => 'atmos@atmos.org', :password => 'foo' }
     response.should redirect_to("/")
   end
 end

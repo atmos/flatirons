@@ -15,7 +15,6 @@ class User
   property :id, Serial
   property :login,        String, :nullable => false, :unique => true, :unique_index => true
   property :email,        String, :nullable => false, :unique => true, :unique_index => true
-  property :identity_url, String, :nullable => false, :unique => true, :unique_index => true
  
   validates_format :email, :as => :email_address
 end

@@ -4,7 +4,7 @@ describe User do
   describe "#create with valid params" do
     it "should be valid" do
       user = User.first_or_create({ :login => 'atmos', :email => 'joe@atmoose.org'}, 
-                    {:identity_url => 'http://foo.myopenid.com/atmos', :password => 'foo', :password_confirmation => 'foo'})
+                    {:password => 'foo', :password_confirmation => 'foo'})
       user.should be_valid
     end
   end

@@ -24,11 +24,10 @@ module Merb
     end
     
     def add_sreg(oidreq, oidresp)
-      user = User.first(:identity_url => oidreq.identity)
-      return if user.nil? #FAIL
+      return if session.user.nil? #FAIL
       sreg_data = {
-        'nickname' => user.login,
-        'email'    => user.email
+        'nickname' => session.user.login,
+        'email'    => session.user.email
       }
       sregresp = OpenID::SReg::Response.new(sreg_data)
       oidresp.add_extension(sregresp)

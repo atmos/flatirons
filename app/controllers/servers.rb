@@ -8,11 +8,10 @@ class Servers < Application
     rescue OpenID::Server::ProtocolError => e
       Merb.logger.info e.message
       oidreq = session[:last_oidreq]
-      return render
+      return render unless oidreq
     end
     
     oidresp = nil
-    
     if oidreq.kind_of?(CheckIDRequest)
       identity = oidreq.identity
 
@@ -24,6 +23,7 @@ class Servers < Application
         oidresp = oidreq.answer(false, url(:servers))
       else
         session[:last_oidreq] = oidreq
+        session[:return_to] = ['/']
         return(redirect(url(:acceptance)))
       end
     else
@@ -70,7 +70,7 @@ class Servers < Application
   
   def idp_page(id = nil)
     provides :xrds
-    @types = [ OpenID::OPENID_2_0_TYPE, OpenID::OPENID_1_0_TYPE, OpenID::SREG_URI ]
+    @types = [ OpenID::OPENID_IDP_2_0_TYPE ]
     render :layout => false
   end
   

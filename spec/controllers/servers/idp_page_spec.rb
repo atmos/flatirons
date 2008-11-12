@@ -6,9 +6,7 @@ describe Servers, "#idp_page" do
       response = request("/servers/xrds", {'HTTP_ACCEPT' => 'application/xrds+xml'})
       response.should be_successful
       response.body.should have_xpath("//xrd/service[uri='http://example.org/servers']")
-      response.body.should have_xpath("//xrd/service[type='http://specs.openid.net/auth/2.0/signon']")
-      response.body.should have_xpath("//xrd/service[type='http://openid.net/signon/1.0']")
-      response.body.should have_xpath("//xrd/service[type='http://openid.net/sreg/1.0']")
+      response.body.should have_xpath("//xrd/service[type='http://specs.openid.net/auth/2.0/server']")
     end
   end
   
