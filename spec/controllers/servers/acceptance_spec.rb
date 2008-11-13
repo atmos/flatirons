@@ -1,5 +1,3 @@
-require File.join(File.dirname(__FILE__), '..', '..', 'spec_helper.rb')
-
 describe Servers do
   describe "#acceptance" do
     it "should redirect to the login page" do

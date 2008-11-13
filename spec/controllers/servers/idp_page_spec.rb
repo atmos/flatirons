@@ -1,5 +1,3 @@
-require File.dirname(__FILE__) + '/../../spec_helper'
-
 describe Servers, "#idp_page" do
   describe "accepting xrds+xml" do
     it "renders the provider idp page" do

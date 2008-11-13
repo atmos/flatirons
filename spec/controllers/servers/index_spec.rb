@@ -1,5 +1,3 @@
-require File.join(File.dirname(__FILE__), '..', '..', 'spec_helper.rb')
-
 describe Servers, "#index" do
   describe "empty params" do
     it "should let you know about the flatirons(users shouldn't ever hit this but you can customize it)" do
@@ -14,8 +12,8 @@ describe Servers, "#index" do
     it "should redirect back to the consumer app with the appropriate query string" do
       params =  {"openid.mode"       => "checkid_setup", 
                  "openid.return_to"  => 'http://consumerapp.com/',
-                 'openid.identity'   => 'http://example.org/users/atmos',
-                 'openid.claimed_id' => 'http://example.org/users/atmos'}
+                 'openid.identity'   => 'http://example.org/users/quentin',
+                 'openid.claimed_id' => 'http://example.org/users/quentin'}
 
       response = request("/servers", :params => params)
     end
@@ -35,8 +33,8 @@ describe Servers, "#index" do
     it "should redirect to the acceptance page(and /login if needed)" do
       params =  {"openid.mode"       => "checkid_setup", 
                  "openid.return_to"  => 'http://consumerapp.com/',
-                 'openid.identity'   => 'http://example.org/users/atmos',
-                 'openid.claimed_id' => 'http://example.org/users/atmos'}
+                 'openid.identity'   => 'http://example.org/users/quentin',
+                 'openid.claimed_id' => 'http://example.org/users/quentin'}
       response = request("/servers", :params => params)
       response.should redirect_to('/servers/acceptance')
     end
@@ -46,8 +44,8 @@ describe Servers, "#index" do
     it "should redirect to the client with a user_setup_url" do
       params =  {"openid.mode"       => "checkid_immediate", 
                  "openid.return_to"  => 'http://consumerapp.com/',
-                 'openid.identity'   => 'http://example.org/users/atmos',
-                 'openid.claimed_id' => 'http://example.org/users/atmos'}
+                 'openid.identity'   => 'http://example.org/users/quentin',
+                 'openid.claimed_id' => 'http://example.org/users/quentin'}
 
       response = request("/servers", :params => params)
       response.status.should == 302

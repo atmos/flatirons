@@ -13,6 +13,23 @@ require "spec" # Satisfies Autotest and anyone else not using the Rake tasks
 # here again, Merb will do it for you
 Merb.start_environment(:testing => true, :adapter => 'runner', :environment => ENV['MERB_ENV'] || 'test')
 
+# transaction specs
+module Flatirons
+  class ExampleGroup < Merb::Test::ExampleGroup
+    before(:each) do
+      @transaction = DataMapper::Transaction.new(repository(:default))
+      @transaction.begin
+      repository(:default).adapter.push_transaction(@transaction)
+    end
+    after(:each) do
+      repository(:default).adapter.pop_transaction
+      @transaction.rollback
+    end
+    Spec::Example::ExampleGroupFactory.default(self)
+  end
+end
+
+# setup helpers for rspec
 Spec::Runner.configure do |config|
   config.include(Merb::Test::ViewHelper)
   config.include(Merb::Test::RouteHelper)
@@ -32,12 +49,24 @@ Spec::Runner.configure do |config|
     end
     preserve_order ? query : query.to_mash
   end
+  
   def setup_user
-    @user =  User.create(:login => 'atmoose', :email => 'atmos@atmos.org', :password => 'foo', :password_confirmation => 'foo')
+    @user =  User.create(:login => 'quentin', :email => 'quentin@example.com', :password => 'foo', :password_confirmation => 'foo')
   end
+  
   def login_user
-    response = request "/login", :method => "PUT", :params => { :email => 'atmos@atmos.org', :password => 'foo' }
+    response = request "/login", :method => "PUT", :params => { :email => 'quentin@example.com', :password => 'foo' }
     response.should redirect_to("/")
+  end
+  
+  def default_request_parameters
+    {
+      "openid.ns"         => "http://specs.openid.net/auth/2.0",
+      "openid.mode"       => "checkid_setup", 
+      "openid.return_to"  => "http://consumerapp.com/",
+      "openid.identity"   => "http://example.org/users/atmos",
+      "openid.claimed_id" => "http://example.org/users/atmos"
+    }
   end
 end
 
@@ -48,20 +77,14 @@ end
 
 given "an authenticated user requesting auth" do
   setup_user
-  params =  {"openid.mode"=>"checkid_setup", "openid.return_to" => 'http://consumerapp.com/',
-                   'openid.identity' => 'http://example.org/users/atmos',
-                   'openid.claimed_id' => 'http://example.org/users/atmos'}
-  request("/servers", :params => params)
+  request("/servers", :params => default_request_parameters)
   response = request "/login", :method => "PUT", :params => { :email => @user.email, :password => 'foo' }
   response.should redirect_to("/")
 end
 
 given 'an returning user with trusted hosts in their session' do
   setup_user
-  params =  {"openid.mode"=>"checkid_setup", "openid.return_to" => 'http://consumerapp.com/',
-                   'openid.identity' => 'http://example.org/users/atmos',
-                   'openid.claimed_id' => 'http://example.org/users/atmos'}
-  request("/servers", :params => params)
+  request("/servers", :params => default_request_parameters)
   response = request "/login", :method => "PUT", :params => { :email => @user.email, :password => 'foo' }
   response.should redirect_to("/")
   response = request("/servers/decision?yes=yes", {'REQUEST_METHOD' => 'POST'})
