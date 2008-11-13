@@ -34,7 +34,10 @@ task :default => 'spec'
 # NAME YOUR RAKE FILES file_name.rake
 ##############################################################################
 namespace :spec do
-  Spec::Rake::SpecTask.new(:ci) do |t|
+  task :update_gems do |t|
+    system("script/update")
+  end
+  Spec::Rake::SpecTask.new(:ci => [:update_gems]) do |t|
     t.spec_opts << %w(-fs --color) << %w(-O spec/spec.opts)
     t.spec_opts << '--loadby' << 'random'
     t.spec_files = %w(controllers models helpers views).collect { |dir| Dir["spec/#{dir}/**/*_spec.rb"] }.flatten
