@@ -107,7 +107,7 @@ gems:
     version: '=2.1.2'
 
   - name: nokogiri
-    version: '=1.0.3'
+    version: '=1.0.6'
 
   - name: webrat
     version: '=0.3.2'
