@@ -1,11 +1,12 @@
 describe Servers, "#index" do
-  describe "empty params" do
-    it "should let you know about the flatirons(users shouldn't ever hit this but you can customize it)" do
+  describe "requesting /servers without an openid mode" do
+    it "should return Http Bad Request" do
       response = request("/servers")
-      response.should be_successful
-      response.should have_xpath("//p/a[@href='http://www.powerset.com/explore/semhtml/Flatirons?query=what+are+the+flatirons']")
-      response.should have_xpath("//p/a[@href='http://github.com/atmos/flatirons/tree/master']")
+      response.status.should == 400
+#      response.should have_xpath("//p/a[@href='http://www.powerset.com/explore/semhtml/Flatirons?query=what+are+the+flatirons']")
+#      response.should have_xpath("//p/a[@href='http://github.com/atmos/flatirons/tree/master']")
     end
+
   end
 
   describe " with openid parameters and authorized", :given => 'an returning user with trusted hosts in their session' do
@@ -56,27 +57,29 @@ describe Servers, "#index" do
     end
   end
   describe "with openid mode of associate" do
-    it "should redirect to the client with a user_setup_url" do
-      params =  {"openid.mode"         => "associate",
+    it "should respond with Diffie Hellman data in kv format" do
+      session = OpenID::Consumer::AssociationManager.create_session("DH-SHA1")
+      params =  {"openid.ns"         => 'http://specs.openid.net/auth/2.0',
+                 "openid.mode"         => "associate",
                  "openid.session_type" => 'DH-SHA1',
                  "openid.assoc_type"   => 'HMAC-SHA1',
-                 "openid.dh_consumer_public"=>"LXkAlLpfrKNX7+Pu6oKs/x1ca+zjPz/kRFpaFo+h9XnryEGcMmcF0e4ce2QlGRC4sseupPbRetrptTYJBWtclVg3Ton4KT8ePxcTJqtZ5Q6a4GXQxdFPLlmhZpFsXp8ik2Y487Ko9WMdM7hctitFV4Czm5bSpR/YXPbLwqDQg48="}
+                 "openid.dh_consumer_public"=> session.get_request['dh_consumer_public']}
 
       response = request("/servers", :params => params)
       response.should be_successful
-      
-      body = response.body.to_s.split(/\n/).inject({}) do |sum, part|
-        k, v = part.split(/:/)
-        sum[k] = v
-        sum
-      end
-      
-      body.should_not be_nil
-      body['assoc_type'].should       == 'HMAC-SHA1'
-      body['assoc_handle'].should     =~ %r!\{HMAC-SHA1\}\{\w{8}\}\{[^\]]{8}!
-      body['session_type'].should     == 'DH-SHA1'
-      body['enc_mac_key'].size.should == 28
-      body['dh_server_public']        == 'W9Orfz0HHHnqDl74gCj35FIE6gyR7WY+T4qEoufMSgjKP+40mUyNS8rzLw5ghUGHMd+NojgU1aWWVOQ5RCaz0d7qvix1xx2UZpFaLi+vEpcgLputRVkROeMWglvbAZbySA0mJ20vx5Qyu0gs3GtuWlM4StGHI2EoCou/V7CDVc='
+
+      message = OpenID::Message.from_kvform(response.body)
+      secret = session.extract_secret(message)
+      secret.should_not be_nil
+
+      args = message.get_args(OpenID::OPENID_NS)
+
+      args['assoc_type'].should       == 'HMAC-SHA1'
+      args['assoc_handle'].should     =~ /^\{HMAC-SHA1\}\{[^\}]{8}\}\{[^\}]{8}\}$/
+      args['session_type'].should     == 'DH-SHA1'
+      args['enc_mac_key'].size.should == 28
+      args['expires_in'].should       =~ /^\d+$/
+      args['dh_server_public'].size.should == 172
     end
   end
 end

@@ -1,6 +1,8 @@
 class Servers < Application
-  before :ensure_authenticated, :only => [:acceptance]
+  before :ensure_authenticated, :only => [:acceptance, :landing]
   include OpenID::Server
+
+  def landing; render; end
 
   def index
     begin
@@ -8,7 +10,7 @@ class Servers < Application
     rescue OpenID::Server::ProtocolError => e
       Merb.logger.info e.message
       oidreq = session[:last_oidreq]
-      return render unless oidreq
+      raise BadRequest unless oidreq
     end
     
     oidresp = nil

@@ -33,7 +33,6 @@ Merb::Router.prepare do
   # Adds the required routes for merb-auth using the password slice
   slice(:merb_auth_slice_password, :name_prefix => nil, :path_prefix => "")
 
-  email_regex = /[^\/]+/
   match("/servers").to(:controller => 'servers').name('servers')
   match("/servers/xrds").to(:controller => 'servers', :action => :idp_page).name('xrds')
   match("/servers/acceptance").to(:controller => 'servers', :action => 'acceptance').name('acceptance')
@@ -48,5 +47,5 @@ Merb::Router.prepare do
   # default_routes
   
   # Change this for your home page to be available at /
-  match('/').to(:controller => 'servers', :action =>'index')
+  match('/').to(:controller => 'servers', :action =>'landing')
 end
