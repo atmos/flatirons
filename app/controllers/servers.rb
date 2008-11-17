@@ -17,8 +17,10 @@ class Servers < Application
     if oidreq.kind_of?(CheckIDRequest)
       identity = oidreq.identity
 
-      session[:last_oidreq] = oidreq
-      session[:return_to] = ['/']
+      unless session.user
+        session[:last_oidreq] = oidreq
+        session[:return_to] = ['/']
+      end
       ensure_authenticated
 
       if authorized?(identity, oidreq.trust_root)
