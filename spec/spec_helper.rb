@@ -55,7 +55,7 @@ Spec::Runner.configure do |config|
   end
   
   def login_user
-    response = request "/login", :method => "PUT", :params => { :email => 'quentin@example.com', :password => 'foo' }
+    response = request "/login", :method => "PUT", :params => { :login => 'quentin', :password => 'foo' }
     response.should redirect_to("/")
   end
   
@@ -64,8 +64,8 @@ Spec::Runner.configure do |config|
       "openid.ns"         => "http://specs.openid.net/auth/2.0",
       "openid.mode"       => "checkid_setup", 
       "openid.return_to"  => "http://consumerapp.com/",
-      "openid.identity"   => "http://example.org/users/atmos",
-      "openid.claimed_id" => "http://example.org/users/atmos"
+      "openid.identity"   => "http://example.org/users/quentin",
+      "openid.claimed_id" => "http://example.org/users/quentin"
     }
   end
 end
@@ -78,15 +78,13 @@ end
 given "an authenticated user requesting auth" do
   setup_user
   request("/servers", :params => default_request_parameters)
-  response = request "/login", :method => "PUT", :params => { :email => @user.email, :password => 'foo' }
-  response.should redirect_to("/")
+  login_user
 end
 
 given 'an returning user with trusted hosts in their session' do
   setup_user
   request("/servers", :params => default_request_parameters)
-  response = request "/login", :method => "PUT", :params => { :email => @user.email, :password => 'foo' }
-  response.should redirect_to("/")
+  login_user
   response = request("/servers/decision?yes=yes", {'REQUEST_METHOD' => 'POST'})
   response.status.should == 302
 end

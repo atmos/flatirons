@@ -5,7 +5,7 @@
 #
 # To load and set the order of strategy processing
 
-Merb::Plugins.config[:"merb-auth"][:login_param]    = :email 
+Merb::Plugins.config[:"merb-auth"][:login_param] = :login
 
 Merb::Slices::config[:"merb-auth-slice-password"][:no_default_strategies] = true
 

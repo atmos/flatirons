@@ -12,10 +12,14 @@ class Servers < Application
       oidreq = session[:last_oidreq]
       raise BadRequest unless oidreq
     end
-    
+
     oidresp = nil
     if oidreq.kind_of?(CheckIDRequest)
       identity = oidreq.identity
+
+      session[:last_oidreq] = oidreq
+      session[:return_to] = ['/']
+      ensure_authenticated
 
       if authorized?(identity, oidreq.trust_root)
         oidresp = oidreq.answer(true, nil, identity)
@@ -24,8 +28,6 @@ class Servers < Application
       elsif oidreq.immediate
         oidresp = oidreq.answer(false, url(:servers))
       else
-        session[:last_oidreq] = oidreq
-        session[:return_to] = ['/']
         return(redirect(url(:acceptance)))
       end
     else
