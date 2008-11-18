@@ -34,8 +34,7 @@ describe Servers, "#index" do
   describe "with openid parameters but unauthorized" do
     it "should redirect to the acceptance page(and /login if needed)" do
       response = request("/servers", :params => default_request_parameters)
-      response.status.should == 401
-      response.should have_xpath("//form[@action='/login' and @method='POST']")
+      response.should be_a_valid_merb_auth_form
     end
   end
 

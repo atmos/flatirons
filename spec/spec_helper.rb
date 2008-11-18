@@ -29,11 +29,30 @@ module Flatirons
   end
 end
 
+module FlatironsLoginForm
+  class FlatironsFormDisplay
+    include Merb::Test::ViewHelper
+    def matches?(target)
+      target.status.should == 401
+      login_param = Merb::Plugins.config[:"merb-auth"][:login_param]
+      target.should have_selector("div.content form[action='/login'][method='POST']")
+      target.should have_selector("div.content form input[type='hidden'][name='_method'][value='PUT']")
+      target.should have_selector("div.content form input##{login_param}[name='#{login_param}'][type='text']")
+      target.should have_selector("div.content form input#password[name='password'][type='password']")
+    end
+  end
+
+  def be_a_valid_merb_auth_form
+    FlatironsFormDisplay.new
+  end
+end
+
 # setup helpers for rspec
 Spec::Runner.configure do |config|
   config.include(Merb::Test::ViewHelper)
   config.include(Merb::Test::RouteHelper)
   config.include(Merb::Test::ControllerHelper)
+  config.include(FlatironsLoginForm)
   config.mock_with(:rr)
   
   def query_parse(query_string, delimiter = '&;', preserve_order = false)

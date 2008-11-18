@@ -1,6 +1,7 @@
 describe Users, "#show" do
   before(:each) { setup_user }
   describe "accepting xrds+xml" do
+
     it "renders the user's identity page(/users/quentin)" do
       response = request("/users/quentin", {'HTTP_ACCEPT' => 'application/xrds+xml'})
       response.should be_successful
@@ -9,6 +10,7 @@ describe Users, "#show" do
       response.body.should have_xpath("//xrd/service[type='http://specs.openid.net/auth/2.0/signon']")
       response.body.should have_xpath("//xrd/service[type='http://openid.net/sreg/1.0']")
     end
+
     it "gracefully handles non-existent user requests(/users/romeo)" do
       response = request("/users/romeo", {'HTTP_ACCEPT' => 'application/xrds+xml'})
       response.status.should == 404
@@ -16,6 +18,7 @@ describe Users, "#show" do
   end
 
   describe "accepting text/html" do
+
     it "renders the user's identity page(/users/quentin)" do
       response = request("/users/quentin")
       response.should be_successful
@@ -25,8 +28,8 @@ describe Users, "#show" do
       response.headers["X-XRDS-Location"].should == "http://example.org/users/quentin/xrds"
     end
   end
-  
-  it "should handle routing for /users/atmos@atmos.org/xrds properly" do
+
+  it "should handle routing for /users/quentin/xrds properly" do
     request_to("/users/quentin/xrds", :get, {:http_accept => 'application/xrds+xml'}).
       should route_to(Users, :show).with(:id => 'quentin')
   end
