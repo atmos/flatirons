@@ -3,8 +3,8 @@ flatirons
 
 This is a little merb app that serves as an openid provider.  The rails provider
 app inside of the ruby-openid gem is dated and has 0 specs.  I needed one at work
-today and it seemed best to learn the code by specing as I go.  This works w/
-merb 1.0.1
+and it seemed best to learn the code by specing as I go.  This works w/ merb
+1.0.1.
 
 Requirements (UNIX)
 -------------------
