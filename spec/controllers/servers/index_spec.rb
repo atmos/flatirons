@@ -3,8 +3,6 @@ describe Servers, "#index" do
     it "should return Http Bad Request" do
       response = request("/servers")
       response.status.should == 400
-#      response.should have_xpath("//p/a[@href='http://www.powerset.com/explore/semhtml/Flatirons?query=what+are+the+flatirons']")
-#      response.should have_xpath("//p/a[@href='http://github.com/atmos/flatirons/tree/master']")
     end
 
   end
@@ -14,7 +12,7 @@ describe Servers, "#index" do
       response = request("/servers", :params => default_request_parameters)
       response.status.should == 302
 
-#      redirect_params = query_parse(Addressable::URI.parse(response.headers['Location']).query)
+#      redirect_params = Addressable::URI.parse(response.headers['Location']).query_values
 #
 #      %w(ns ns.sreg sreg.nickname sreg.email claimed_id identity mode op_endpoint assoc_handle response_nonce signed).each do |k|
 #        redirect_params["openid.#{k}"].should_not be_nil

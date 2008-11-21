@@ -54,30 +54,16 @@ Spec::Runner.configure do |config|
   config.include(Merb::Test::ControllerHelper)
   config.include(FlatironsLoginForm)
   config.mock_with(:rr)
-  
-  def query_parse(query_string, delimiter = '&;', preserve_order = false)
-    query = preserve_order ? Dictionary.new : {}
-    for pair in (query_string || '').split(/[#{delimiter}] */n)
-      key, value = URI.unescape(pair).split('=',2)
-      next if key.nil?
-      if key.include?('[')
-        normalize_params(query, key, value)
-      else        
-        query[key] = value
-      end
-    end
-    preserve_order ? query : query.to_mash
-  end
-  
+
   def setup_user
     @user =  User.create(:login => 'quentin', :email => 'quentin@example.com', :password => 'foo', :password_confirmation => 'foo')
   end
-  
+
   def login_user
     response = request "/login", :method => "PUT", :params => { :login => 'quentin', :password => 'foo' }
     response.should redirect_to("/")
   end
-  
+
   def default_request_parameters
     {
       "openid.ns"         => "http://specs.openid.net/auth/2.0",

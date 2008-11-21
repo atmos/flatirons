@@ -30,78 +30,78 @@ gems:
     require: extlib
 
   - name: merb-core
-    version: '=1.0'
+    version: '=1.0.1'
     require: merb-core
   
   - name: merb-gen
-    version: '=1.0'
+    version: '=1.0.1'
 
   - name: merb-param-protection
-    version: '=1.0'
+    version: '=1.0.1'
     require: merb-param-protection
 
   - name: merb-haml
-    version: '=1.0'
+    version: '=1.0.1'
     require: merb-haml
     
   - name: merb-auth-core
-    version: '=1.0'
+    version: '=1.0.1'
     require: merb-auth-core
 
   - name: merb-auth-more
-    version: '=1.0'
+    version: '=1.0.1'
     require: merb-auth-more
     
   - name: merb-auth-slice-password
-    version: '=1.0'
+    version: '=1.0.1'
     require: merb-auth-slice-password
     
   - name: merb-cache
-    version: '=1.0'
+    version: '=1.0.1'
     require: merb-cache
   
   - name: merb-helpers
-    version: '=1.0'
+    version: '=1.0.1'
     require: merb-helpers
 
   - name: merb-assets
-    version: '=1.0'
+    version: '=1.0.1'
     require: merb-assets
     
   - name: merb-slices
-    version: '=1.0'
+    version: '=1.0.1'
     require: merb-slices
 
   - name: merb-action-args
-    version: '=1.0'
+    version: '=1.0.1'
     require: merb-action-args
 
   - name: merb_datamapper
-    version: '=0.9.6'
+    version: '=0.9.7'
     require: merb_datamapper
 
   - name: dm-core
-    version: '=0.9.6'
+    version: '=0.9.7'
     require: 'dm-core'
 
   - name: dm-validations
-    version: '=0.9.6'
+    version: '=0.9.7'
     require: dm-validations
 
   - name: dm-serializer
-    version: '=0.9.6'
+    version: '=0.9.7'
     require: dm-serializer
 
   - name: dm-timestamps
-    version: '=0.9.6'
+    version: '=0.9.7'
     require: dm-timestamps
 
   - name: dm-types
-    version: '=0.9.6'
+    version: '=0.9.7'
     require: dm-types
 
   - name: do_sqlite3
-    version: '=0.9.6'
+    version: '=0.9.7'
 
   - name: ruby-openid
     version: '=2.1.2'
