@@ -1,23 +1,23 @@
 #!/usr/bin/env ruby
-require 'yaml'
+
+require File.dirname(__FILE__) + "/../config/rubundler"
+r = Rubundler.new
+r.setup_env
 
 begin
-  root = File.expand_path(File.dirname(__FILE__) + '/..')
-  ENV["GEM_HOME"] = root + '/gems'
-  ENV["GEM_PATH"] = root + '/gems'
-
-  gem_config = YAML.load_file(root + "/config/gems.yml")
-  
-  require 'rubygems'
-  gem 'merb-core', gem_config['gems'].find { |g| g['name'] == 'merb-core' }['version']
   require 'merb-core'
-
   Merb.start_environment(:adapter => 'runner', :environment => ENV['MERB_ENV'] || 'development')
   DataMapper.repository.adapter.query "SELECT 1"
 
-  puts "OK, You can start Merb successfully!"
 rescue SystemExit => e
-  exit 0
+  if e.backtrace.first =~ %r|/lib/merb-core/bootloader.rb:736:in `exit'|
+    puts "OK, You can start Merb successfully!"
+    exit 0
+  else
+    puts "Got a SystemExit which was unexpected: #{e.message}"
+    puts e.backtrace
+    exit 2
+  end
 rescue Exception => e
   puts "Got an exception: #{e.class}, #{e.message}"
   puts e.backtrace

@@ -1,7 +1,9 @@
+require File.dirname(__FILE__) + "/rubundler"
+r = Rubundler.new
+r.setup_env
+r.setup_requirements
+
 # Go to http://wiki.merbivore.com/pages/init-rb
-gem 'ruby-openid', '2.1.2'
-gem 'addressable', '2.0.0'
-require 'config/dependencies.rb'
 require 'pp'
 
 use_orm :datamapper
