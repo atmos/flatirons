@@ -1,6 +1,6 @@
 describe "Identity Discovery" do
   before(:each) { setup_user }
-  describe "(/users/quentin) accepting xrds+xml" do
+  describe "accepting xrds+xml" do
     it "renders the user's identity page(/users/quentin)" do
       response = request("/users/quentin", {'HTTP_ACCEPT' => 'application/xrds+xml'})
       response.should be_successful
@@ -16,14 +16,13 @@ describe "Identity Discovery" do
     end
   end
 
-  describe "(/users/quentin) accepting text/html" do
-
-    it "renders the user's identity page" do
+  describe "accepting text/html" do
+    it "renders the user's identity page (/users/quentin)" do
       response = request("/users/quentin")
       response.should be_successful
-      response.should have_xpath("//link[@rel='openid.server' and @href='http://example.org/servers']")
-      response.should have_xpath("//meta[@http-equiv='X-XRDS-Location' and @content='http://example.org/users/quentin/xrds']")
-      response.should have_xpath("//body[p='OpenID identity page for quentin']")
+      response.should have_selector("head link[rel='openid.server'][href='http://example.org/servers']")
+      response.should have_selector("head meta[http-equiv='X-XRDS-Location'][content='http://example.org/users/quentin/xrds']")
+      response.should have_selector("body p:contains('OpenID identity page for quentin')")
       response.headers["X-XRDS-Location"].should == "http://example.org/users/quentin/xrds"
     end
   end

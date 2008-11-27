@@ -5,7 +5,7 @@ describe "User Landing Page" do
       response.should be_a_valid_merb_auth_form
     end
   end
-  describe "requesting /", :given => 'an authenticated user' do
+  describe "requesting / while authenticated", :given => 'an authenticated user' do
     it "should display the landing page" do
       response = request("/")
       response.should be_successful
