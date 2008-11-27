@@ -1,4 +1,4 @@
-describe Users, "#show" do
+describe "Identity Discovery" do
   before(:each) { setup_user }
   describe "accepting xrds+xml" do
 
