@@ -25,4 +25,7 @@ class Merb::Authentication
     user.nil? ? user : user.id
   end
 end
-  
+
+MerbAuthSlicePassword::Sessions.class_eval do
+  log_params_filtered :password
+end
