@@ -1,4 +1,4 @@
-describe Servers do
+describe "User Landing Page" do
   describe "requesting / while unauthenticated" do
     it "should force the user to login" do
       response = request("/")
@@ -6,7 +6,7 @@ describe Servers do
     end
   end
   describe "requesting /", :given => 'an authenticated user' do
-    it "should force the user to login" do
+    it "should display the landing page" do
       response = request("/")
       response.should be_successful
       response.should have_xpath("//p/a[@href='http://www.powerset.com/explore/semhtml/Flatirons?query=what+are+the+flatirons']")

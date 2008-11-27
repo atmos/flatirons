@@ -1,4 +1,4 @@
-describe Servers, "#idp_page" do
+describe "Provider URL Information" do
   describe "accepting xrds+xml" do
     it "renders the provider idp page" do
       response = request("/servers/xrds", {'HTTP_ACCEPT' => 'application/xrds+xml'})

@@ -1,7 +1,6 @@
 describe "Identity Discovery" do
   before(:each) { setup_user }
-  describe "accepting xrds+xml" do
-
+  describe "(/users/quentin) accepting xrds+xml" do
     it "renders the user's identity page(/users/quentin)" do
       response = request("/users/quentin", {'HTTP_ACCEPT' => 'application/xrds+xml'})
       response.should be_successful
@@ -17,9 +16,9 @@ describe "Identity Discovery" do
     end
   end
 
-  describe "accepting text/html" do
+  describe "(/users/quentin) accepting text/html" do
 
-    it "renders the user's identity page(/users/quentin)" do
+    it "renders the user's identity page" do
       response = request("/users/quentin")
       response.should be_successful
       response.body.should have_xpath("//link[@rel='openid.server' and @href='http://example.org/servers']")
