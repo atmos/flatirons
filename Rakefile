@@ -32,7 +32,7 @@ end
 require 'spec/rake/spectask'
 require 'merb-core/test/tasks/spectasks'
 desc 'Default: run spec examples'
-task :default => 'spec'
+task :default => 'spec:ci'
 
 ##############################################################################
 # ADD YOUR CUSTOM TASKS IN /lib/tasks

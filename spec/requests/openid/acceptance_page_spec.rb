@@ -14,7 +14,7 @@ describe "Getting the Acceptance Page" do
   end
  end
 describe "Posting to the Decision Page" do
-  describe "when cancel clicked", :given => 'an authenticated user requesting auth' do
+  describe "when Cancel is clicked", :given => 'an authenticated user requesting auth' do
     it "redirects to the cancel url" do
       response = request("/servers/decision", {'REQUEST_METHOD' => 'POST'})
       response.should redirect_to('http://consumerapp.com/')

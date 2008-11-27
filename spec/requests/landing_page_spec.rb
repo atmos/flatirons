@@ -1,11 +1,11 @@
 describe "User Landing Page" do
-  describe "requesting / while unauthenticated" do
+  describe "requesting / when unauthenticated" do
     it "should force the user to login" do
       response = request("/")
       response.should be_a_valid_merb_auth_form
     end
   end
-  describe "requesting / while authenticated", :given => 'an authenticated user' do
+  describe "requesting / when authenticated", :given => 'an authenticated user' do
     it "should display the landing page" do
       response = request("/")
       response.should be_successful

@@ -1,12 +1,12 @@
-describe "OpenID Mode: CheckID Setup" do
-  describe "requesting /servers without an openid mode" do
-    it "should return Http Bad Request" do
+describe "requesting OpenID Mode: CheckID Setup" do
+  describe "/servers without an openid mode" do
+    it "should return Http BadRequest" do
       response = request("/servers")
       response.status.should == 400
     end
   end
 
-  describe " with openid parameters and authorized", :given => 'an returning user with trusted hosts in their session' do
+  describe " with valid openid 2.0 parameters when authenticated", :given => 'an returning user with trusted hosts in their session' do
     it "should redirect back to the consumer app with the appropriate query string" do
       response = request("/servers", :params => default_request_parameters)
       response.status.should == 302
@@ -28,7 +28,7 @@ describe "OpenID Mode: CheckID Setup" do
     end
   end
 
-  describe "with openid parameters but unauthorized" do
+  describe "with valid openid 2.0 parameters when unauthorized" do
     it "should redirect to the acceptance page(and /login if needed)" do
       response = request("/servers", :params => default_request_parameters)
       response.should be_a_valid_merb_auth_form
