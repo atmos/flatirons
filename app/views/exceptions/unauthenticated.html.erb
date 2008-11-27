@@ -1,3 +1,4 @@
+<%= error_messages_for session.authentication, :header => '<h2>Unable to login</h2>' %>
 <form id="signup" action="<%= url(:perform_login) %>" method="POST" accept-charset="utf-8">
   <input type="hidden" name="_method" value="PUT" />
   <h1>Login</h1>
