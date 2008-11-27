@@ -4,7 +4,7 @@ flatirons
 This is a little merb app that serves as an openid provider.  The rails provider
 app inside of the ruby-openid gem is dated and has 0 specs.  I needed one at work
 and it seemed best to learn the code by specing as I go.  This works w/ merb
-1.0.1.
+1.0.3.
 
 Requirements (UNIX)
 -------------------
@@ -24,11 +24,11 @@ A client should hit 'http://localhost:4001/users/atmoose
 
 In Staging
 ----------
-tbd
+Ghetto God Config that uses 'pkill -9 -f merb' in the stop script
 
 In Production
 -------------
-tbd
+Ghetto God Config that uses 'pkill -9 -f merb' in the stop script
 
 Diagrams
 --------
@@ -44,5 +44,3 @@ Guidance
 http://openid.net/specs/openid-authentication-2_0.html
 http://wiki.openid.net/OpenID_Authentication_2.0
 
-http://jystewart.net/process/2007/10/a-ruby-on-rails-openid-server/
-http://lists.openidenabled.com/pipermail/dev/2007-March/000347.html
