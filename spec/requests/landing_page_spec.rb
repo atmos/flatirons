@@ -17,8 +17,8 @@ describe "User Landing Page" do
     it "should display the landing page" do
       response = request("/")
       response.should be_successful
-      response.should have_xpath("//p/a[@href='http://www.powerset.com/explore/semhtml/Flatirons?query=what+are+the+flatirons']")
-      response.should have_xpath("//p/a[@href='http://github.com/atmos/flatirons/tree/master']")
+      response.should have_selector("p a[href='http://www.powerset.com/explore/semhtml/Flatirons?query=what+are+the+flatirons']")
+      response.should have_selector("p a[href='http://github.com/atmos/flatirons/tree/master']")
     end
   end
 end
