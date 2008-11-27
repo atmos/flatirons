@@ -3,6 +3,7 @@
 log/*
 tmp/*
 gems/*
+doc/*
 TAGS
 config/openid-store/*
 config/openid-store-test/*

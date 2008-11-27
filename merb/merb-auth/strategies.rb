@@ -6,9 +6,6 @@
 # To load and set the order of strategy processing
 
 Merb::Plugins.config[:"merb-auth"][:login_param] = :login
-
-Merb::Slices::config[:"merb-auth-slice-password"][:no_default_strategies] = true
-
+Merb::Slices::config[:"merb-auth-slice-password"][:no_default_strategies] = true # this doesn't actually work
 Merb::Authentication.activate!(:default_password_form)
-
 Merb::Authentication.maintain_session_keys << :last_oidreq
