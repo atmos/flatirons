@@ -8,4 +8,13 @@ class Users < Application
     headers['X-XRDS-Location'] = absolute_url(:user_xrds, {:id => @user.login})
     render :layout => false
   end
+
+  def signup
+    send_mail(SignupMailer, :notify_on_event, {
+      :from => 'root@example.com',
+      :to => "someoneelse@gmail.com",
+      :subject => "Welcome to the Flatirons OpenID Provider"
+    })
+    redirect url(:login)
+  end
 end

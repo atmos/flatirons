@@ -7,6 +7,7 @@ add_gem 'mongrel'
 add_gem 'hoe'
 add_gem 'rr'
 add_gem 'do_sqlite3', '0.9.7'
+add_gem 'ruby-debug', '0.10.3'
 
 add_dependency 'dm-core', '0.9.7'
 add_dependency 'dm-validations', '0.9.7', :require => 'dm-validations'

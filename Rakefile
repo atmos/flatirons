@@ -45,7 +45,7 @@ namespace :spec do
   Spec::Rake::SpecTask.new(:ci => [:update_gems]) do |t|
     t.spec_opts << %w(-fs --color) << %w(-O spec/spec.opts)
     t.spec_opts << '--loadby' << 'random'
-    t.spec_files = %w(requests models helpers views).collect { |dir| Dir["spec/#{dir}/**/*_spec.rb"] }.flatten
+    t.spec_files = %w(requests mailers models helpers views).collect { |dir| Dir["spec/#{dir}/**/*_spec.rb"] }.flatten
     t.rcov = ENV.has_key?('NO_RCOV') ? ENV['NO_RCOV'] != 'true' : true
     t.rcov_opts << '--exclude' << 'spec/,config/,exceptions,schema,gems/gems,merb/'
     t.rcov_opts << '--text-summary'

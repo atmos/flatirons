@@ -1,5 +1,7 @@
 class SignupMailer < Merb::MailController
   def notify_on_event
+    @host = 'http://example.org'
+    @user = session.user
     # use params[] passed to this controller to get data
     # read more at http://wiki.merbivore.com/pages/mailers
     render_mail

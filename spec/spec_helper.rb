@@ -9,6 +9,7 @@ end
 require "merb-core"
 require "spec" # Satisfies Autotest and anyone else not using the Rake tasks
 require 'pp'
+require 'ruby-debug'
 
 # this loads all plugins required in your init file so don't add them
 # here again, Merb will do it for you
@@ -27,6 +28,19 @@ module Flatirons
       @transaction.rollback
     end
     Spec::Example::ExampleGroupFactory.default(self)
+  end
+
+  module MailControllerTestHelper
+    # Helper to clear mail deliveries.
+    def clear_mail_deliveries
+      Merb::Mailer.deliveries.clear
+    end
+    # Helper to access last delivered mail.
+    # In test mode merb-mailer puts email to
+    # collection accessible as Merb::Mailer.deliveries.
+    def last_delivered_mail
+      Merb::Mailer.deliveries.last
+    end
   end
 end
 
@@ -48,12 +62,17 @@ module FlatironsLoginForm
   end
 end
 
+class Merb::Mailer
+  self.delivery_method = :test_send
+end
+
 # setup helpers for rspec
 Spec::Runner.configure do |config|
   config.include(Merb::Test::ViewHelper)
   config.include(Merb::Test::RouteHelper)
   config.include(Merb::Test::ControllerHelper)
   config.include(FlatironsLoginForm)
+  config.include(Flatirons::MailControllerTestHelper)
   config.mock_with(:rr)
 
   def setup_user
