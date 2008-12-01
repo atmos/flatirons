@@ -24,6 +24,7 @@ add_dependency 'merb-helpers', '=1.0.3', :require => 'merb-helpers'
 add_dependency 'merb-assets', '=1.0.3', :require => 'merb-assets'
 add_dependency 'merb-slices', '=1.0.3', :require => 'merb-slices'
 add_dependency 'merb-action-args', '=1.0.3', :require => 'merb-action-args'
+add_dependency 'merb-mailer', '=1.0.3', :require => 'merb-mailer'
 add_dependency 'merb_datamapper', '0.9.7'
 
 add_dependency 'ruby-openid', '=2.1.2'

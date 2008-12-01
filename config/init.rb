@@ -32,9 +32,4 @@ Merb.add_mime_type(:xrds, :to_xrds, %w[application/xrds+xml], "Content-Encoding"
 
 Merb::BootLoader.after_app_loads do
   DataMapper.auto_migrate!
-  if Merb.env == 'development'
-    User.first_or_create({:login => 'atmoose', :email => 'atmoose@atmos.com'}, 
-                         {:password => 'foo', :password_confirmation => 'foo'})
-  end
-  # This will get executed after your app's classes have been loaded.
 end
