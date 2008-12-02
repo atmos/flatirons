@@ -11,7 +11,7 @@ module Merb
     end
     
     def authorized?(identity_url, trust_root)
-      return (session[:user] and (identity_url == url_for_user) and approved(trust_root))
+      return (session[:user] and (identity_url == identity_url_for_user) and approved(trust_root))
     end
     
     def approved(trust_root)
@@ -19,10 +19,10 @@ module Merb
       return session[:approvals].member?(trust_root)
     end
     
-    def url_for_user
-      "/users/#{session.user.login}"
+    def identity_url_for_user
+      absolute_url(:user, {:id => session.user.login})
     end
-    
+
     def add_sreg(oidreq, oidresp)
       return if session.user.nil? #FAIL
       sreg_data = {
@@ -49,8 +49,6 @@ module Merb
         end
         Merb.logger.info! session.inspect
         redirect web_response.headers['location']
-      else
-        web_response.body
       end
     end
   end

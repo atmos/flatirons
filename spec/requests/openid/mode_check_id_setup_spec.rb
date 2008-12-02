@@ -11,20 +11,17 @@ describe "requesting OpenID Mode: CheckID Setup" do
       response = request("/servers", :params => default_request_parameters)
       response.status.should == 302
 
-#      redirect_params = Addressable::URI.parse(response.headers['Location']).query_values
-#
-#      %w(ns ns.sreg sreg.nickname sreg.email claimed_id identity mode op_endpoint assoc_handle response_nonce signed).each do |k|
-#        redirect_params["openid.#{k}"].should_not be_nil
-#      end
-    end
-    it "should handle redirecting with all the applicable query parameters" do
-      pending
-      response = request("/servers", :params => default_request_parameters)
-      response.status.should == 302
-      redirect_params = query_parse(Addressable::URI.parse(response.headers['Location']).query)
+      redirect_params = Addressable::URI.parse(response.headers['Location']).query_values
       %w(ns ns.sreg sreg.nickname sreg.email claimed_id identity mode op_endpoint assoc_handle response_nonce signed).each do |k|
         redirect_params["openid.#{k}"].should_not be_nil
       end
+    end
+  end
+  
+  describe " with valid openid 2.0 parameters when authenticated", :given => 'an authenticated user' do
+    it "should redirect to the acceptance page since the host isn't trusted yet" do
+      response = request("/servers", :params => default_request_parameters)
+      response.should redirect_to("/servers/acceptance")
     end
   end
 

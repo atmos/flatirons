@@ -3,8 +3,8 @@ describe "Signup up for an account" do
     response = request("/users/new")
     response.should be_successful
     response.should have_selector("form[action='/users'][method='post']")
-    response.should have_selector("input#login[type='text'][name='login']")
-    response.should have_selector("input#email[type='text'][name='email']")
+    response.should have_selector("input#login[type='text'][name='login'][value='']")
+    response.should have_selector("input#email[type='text'][name='email'][value='']")
   end
 end
 

@@ -10,6 +10,7 @@ class Users < Application
   end
 
   def new
+    @user = User.new
     render
   end
 
@@ -23,12 +24,12 @@ class Users < Application
       })
       redirect url(:login)
     else
-      Merb.logger.info! @user.errors.inspect
       render :new
     end
   end
 
   def update(id, user)
+    @user = User.first(:login => id)
     raise
   end
 
