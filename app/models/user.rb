@@ -1,20 +1,23 @@
-# This is a default user class used to activate merb-auth.  Feel free to change from a User to 
-# Some other class, or to remove it altogether.  If removed, merb-auth may not work by default.
-#
-# Don't forget that by default the salted_user mixin is used from merb-more
-# You'll need to setup your db as per the salted_user mixin, and you'll need
-# To use :password, and :password_confirmation when creating a user
-#
-# see merb/merb-auth/setup.rb to see how to disable the salted_user mixin
-# 
-# You will need to setup your database and create a user.
-
 class User
   include DataMapper::Resource
  
   property :id, Serial
-  property :login,        String, :nullable => false, :unique => true, :unique_index => true
-  property :email,        String, :nullable => false, :unique => true, :unique_index => true
- 
-  validates_format :email, :as => :email_address
+  property :login,               String, :nullable => false, :unique => true, :unique_index => true
+  property :email,               String, :nullable => false, :unique => true, :unique_index => true, :format => :email_address
+  property :registration_token,  String, :nullable => true,  :unique => true, :unique_index => true
+
+  def password_required?; !new_record? end 
+  
+  before :save, :set_defaults
+  def set_defaults
+    @registration_token = Digest::SHA1.hexdigest("#{email}#{Time.now.to_i}")
+    randpass = Digest::SHA1.hexdigest("#{email}#{Time.now.to_i}")
+    @password ||= randpass
+    @password_confirmation ||= randpass
+    true
+  end
+
+  def registered?
+    registration_token.nil?
+  end
 end

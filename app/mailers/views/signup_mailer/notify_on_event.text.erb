@@ -3,7 +3,7 @@ Greetings,
 Someone claiming to be you requested an account on the OpenID provider
 at <%= @host %>.  If you want to enable an account for this
 email address(<%= @user.email %>) then click 
-<a href="/lolerskates'>here</a> confirm 
+<a href="/users/signup/<%= @user.registration_token %>'>here</a> confirm 
 <%= "#{@host}/#{@user.login}"  %> as your OpenID url.
 
 __

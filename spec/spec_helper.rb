@@ -50,7 +50,7 @@ module FlatironsLoginForm
     def matches?(target)
       target.status.should == 401
       login_param = Merb::Plugins.config[:"merb-auth"][:login_param]
-      target.should have_selector("div.content form[action='/login'][method='POST']")
+      target.should have_selector("div.content form[action='/login'][method='post']")
       target.should have_selector("div.content form input[type='hidden'][name='_method'][value='PUT']")
       target.should have_selector("div.content form input##{login_param}[name='#{login_param}'][type='text']")
       target.should have_selector("div.content form input#password[name='password'][type='password']")
@@ -74,13 +74,15 @@ Spec::Runner.configure do |config|
   config.include(FlatironsLoginForm)
   config.include(Flatirons::MailControllerTestHelper)
   config.mock_with(:rr)
-
+  config.before(:each) do
+    User.all.destroy!
+  end
   def setup_user
     @user =  User.create(:login => 'quentin', :email => 'quentin@example.com', :password => 'foo', :password_confirmation => 'foo')
   end
 
   def login_user
-    response = request "/login", :method => "PUT", :params => { :login => 'quentin', :password => 'foo' }
+    response = request url(:perform_login), :method => "PUT", :params => { :login => 'quentin', :password => 'foo' }
     response.should redirect_to("/")
   end
 

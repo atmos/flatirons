@@ -5,6 +5,7 @@ r.setup_requirements
 
 # Go to http://wiki.merbivore.com/pages/init-rb
 require 'pp'
+require 'digest/sha1'
 
 use_orm :datamapper
 use_test :rspec

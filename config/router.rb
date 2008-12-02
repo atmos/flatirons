@@ -29,7 +29,8 @@ Merb.logger.info("Compiling routes...")
 Merb::Router.prepare do
   # RESTful routes
   # resources :posts
-  
+  resources :users
+
   # Adds the required routes for merb-auth using the password slice
   slice(:merb_auth_slice_password, :name_prefix => nil, :path_prefix => "")
 
@@ -37,16 +38,7 @@ Merb::Router.prepare do
   match("/servers/xrds").to(:controller => 'servers', :action => :idp_page).name('xrds')
   match("/servers/acceptance").to(:controller => 'servers', :action => 'acceptance').name('acceptance')
   match("/servers/decision").to(:controller => 'servers', :action => 'decision').name('server_decision')
-  match("/users/signup").to(:controller => :users, :action => :signup).name('signup')
-  match("/users/:id").to(:controller => :users, :action => :show).name('user')
-  match("/users/:id/xrds").to(:controller => :users, :action => :show).name("user_xrds")
 
-  # This is the default route for /:controller/:action/:id
-  # This is fine for most cases.  If you're heavily using resource-based
-  # routes, you may want to comment/remove this line to prevent
-  # clients from calling your create or destroy actions with a GET
-  # default_routes
-  
   # Change this for your home page to be available at /
   match('/').to(:controller => 'servers', :action => 'landing')
 end

@@ -1,15 +1,8 @@
 <%= error_messages_for session.authentication, :header => '<h2>Unable to login</h2>' %>
-<form id="signup" action="<%= url(:perform_login) %>" method="POST" accept-charset="utf-8">
-  <input type="hidden" name="_method" value="PUT" />
-  <h1>Login</h1>
-  <label for='email'>Login
-    <input type='text' name="login" id='login' />
-  </label>
-
-  <label for='password'>Password
-    <input type="password" name="password" value="" id="password" />
-  </label>
-
-  <input type='submit' class='submit' value='Log in' />
-</form>
+<%= form :action => url(:perform_login) do %>
+  <%= hidden_field :name => '_method', :value => 'PUT' %>
+  <%= text_field :name => "login", :id => 'login', :label => "Login" %>
+  <%= password_field :name => 'password', :id => 'password', :label => 'Password' %>
+  <%= submit "Log in" %>
+<% end =%>
 

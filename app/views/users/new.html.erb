@@ -1,0 +1,6 @@
+<%= error_messages_for @user, :header => '<h2>Unable to Signup</h2>' %>
+<%= form :action => url(:users) do %>
+  <%= text_field :id => 'login', :name => 'login', :label => "Login" %>
+  <%= text_field :id => 'email', :name => 'email', :label => "Email Address" %>
+  <%= submit "Create" %>
+<% end =%>
