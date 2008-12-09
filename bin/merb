@@ -3,7 +3,5 @@ require File.dirname(__FILE__) + "/../config/rubundler"
 r = Rubundler.new
 r.setup_env
 
-# workaround for load failures on ruby 1.8.6
-version = r.gem_config.gems.find { |element| element.first == 'merb-core' }.last
-version.gsub!(/[>=]+/, '')
-load ENV['GEM_HOME']+"/gems/merb-core-#{version}/bin/merb"
+spec = Gem.loaded_specs['merb-core']
+load File.join(spec.full_gem_path, spec.bindir, 'merb')

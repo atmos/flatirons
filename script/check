@@ -8,9 +8,8 @@ begin
   require 'merb-core'
   Merb.start_environment(:adapter => 'runner', :environment => ENV['MERB_ENV'] || 'development')
   DataMapper.repository.adapter.query "SELECT 1"
-
 rescue SystemExit => e
-  if e.backtrace.first =~ %r|/lib/merb-core/bootloader.rb:736:in `exit'|
+  if e.success?
     puts "OK, You can start Merb successfully!"
     exit 0
   else
