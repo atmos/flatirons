@@ -1,21 +1,21 @@
-describe SignupMailer, "#notify_on_event email template" do
+describe "A New User signing up for an account" do
   before :each do
     clear_mail_deliveries
   end
   
-  describe "arthur signing up for an account with valid info" do
-    it "welcomes arthur to our sight and provides a registration url" do
+  describe "with valid info" do
+    it "redirects arthur to login and provides a registration url via email" do
       response = request("/users", :method => 'post', 
                          :params => {:email => 'arthur@example.com', :login => 'arthur'})
       response.should redirect_to('/login')
 
       last_delivered_mail.text.should match(%r!http://example.org/arthur!)
-      registration_url = "/users/signup/#{User.first(:login => 'arthur').registration_token}"
+      registration_url = "/users/signup/?token=#{User.first(:login => 'arthur').registration_token}"
       last_delivered_mail.text.should match(%r!#{registration_url}!)
     end
   end
-  describe "arthur signing up for an account with invalid info" do
-    it "welcomes arthur to our sight and provides a registration url" do
+  describe "with invalid info" do
+    it "displays the signup form again" do
       response = request("/users", :method => 'post', 
                          :params => {:email => 'arthur.com', :login => 'arthur'})
       response.should be_successful

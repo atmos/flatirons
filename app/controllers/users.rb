@@ -1,4 +1,6 @@
 class Users < Application
+  before :ensure_authenticated, :exclude => [:show, :new, :create, :signup]
+
   def show(id)
     provides :xrds, :html
 
@@ -13,7 +15,11 @@ class Users < Application
     @user = User.new
     render
   end
-
+  
+  def edit
+    render
+  end
+  
   def create(login, email)
     @user = User.create(:login => login, :email => email)
     if @user.valid?
@@ -31,6 +37,11 @@ class Users < Application
   def update(id, user)
     @user = User.first(:login => id)
     raise
+  end
+
+  def signup(token)
+    @user = User.first(:registration_token => token)
+    render :edit
   end
 
   def destroy(id)
