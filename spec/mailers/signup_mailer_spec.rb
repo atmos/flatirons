@@ -10,7 +10,7 @@ describe "A New User signing up for an account" do
       response.should redirect_to('/login')
 
       last_delivered_mail.text.should match(%r!http://example.org/arthur!)
-      registration_url = "/users/signup/?token=#{User.first(:login => 'arthur').registration_token}"
+      registration_url = "/users/signup/\\?token=#{User.first(:login => 'arthur').registration_token}"
       last_delivered_mail.text.should match(%r!#{registration_url}!)
     end
   end
