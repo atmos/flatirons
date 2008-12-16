@@ -22,3 +22,5 @@ src/*
 .hg/*
 .svn/*
 coverage/*
+bin/
+gems

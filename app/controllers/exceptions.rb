@@ -10,4 +10,8 @@ class Exceptions < Merb::Controller
   def not_acceptable
     render :format => :html
   end
+
+  def bad_request
+    render :format => :html
+  end
 end
