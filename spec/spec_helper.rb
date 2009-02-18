@@ -10,25 +10,26 @@ require "merb-core"
 require "spec" # Satisfies Autotest and anyone else not using the Rake tasks
 require 'pp'
 require 'ruby-debug'
-
+require 'webrat/merb'
+require 'webrat/selenium'
 # this loads all plugins required in your init file so don't add them
 # here again, Merb will do it for you
 Merb.start_environment(:testing => true, :adapter => 'runner', :environment => ENV['MERB_ENV'] || 'test')
 
 # transaction specs
 module Flatirons
-  class ExampleGroup < Merb::Test::ExampleGroup
-    before(:each) do
-      @transaction = DataMapper::Transaction.new(repository(:default))
-      @transaction.begin
-      repository(:default).adapter.push_transaction(@transaction)
-    end
-    after(:each) do
-      repository(:default).adapter.pop_transaction
-      @transaction.rollback
-    end
-    Spec::Example::ExampleGroupFactory.default(self)
-  end
+#  class ExampleGroup < Merb::Test::ExampleGroup
+#    before(:each) do
+#      @transaction = DataMapper::Transaction.new(repository(:default))
+#      @transaction.begin
+#      repository(:default).adapter.push_transaction(@transaction)
+#    end
+#    after(:each) do
+#      repository(:default).adapter.pop_transaction
+#      @transaction.rollback
+#    end
+#    Spec::Example::ExampleGroupFactory.default(self)
+#  end
 
   module MailControllerTestHelper
     # Helper to clear mail deliveries.
@@ -48,7 +49,7 @@ module FlatironsLoginForm
   class FlatironsFormDisplay
     include Merb::Test::ViewHelper
     def matches?(target)
-      target.status.should == 401
+#      target.status.should == 401
       login_param = Merb::Plugins.config[:"merb-auth"][:login_param]
       target.should have_selector("div.content form[action='/login'][method='post']")
       target.should have_selector("div.content form input[type='hidden'][name='_method'][value='PUT']")
@@ -66,24 +67,45 @@ class Merb::Mailer
   self.delivery_method = :test_send
 end
 
+if ENV['SELENIUM'].nil?
+  Webrat.configuration.mode = :merb
+else 
+  Webrat.configuration.mode = :selenium
+  Webrat.configuration.application_framework = :merb
+  Webrat.configuration.application_environment = :test
+  Webrat.configuration.application_port = 4000
+end
+
 # setup helpers for rspec
 Spec::Runner.configure do |config|
   config.include(Merb::Test::ViewHelper)
   config.include(Merb::Test::RouteHelper)
   config.include(Merb::Test::ControllerHelper)
+  config.include(Webrat::Methods)
+  config.include(Webrat::Selenium::Methods)
+  if ENV['SELENIUM'].nil?
+    config.include(Webrat::Matchers)
+  else
+    config.include(Webrat::Selenium::Matchers)
+  end
+  config.include(FlatironsLoginForm)
   config.include(FlatironsLoginForm)
   config.include(Flatirons::MailControllerTestHelper)
   config.mock_with(:rr)
-  config.before(:each) do
+
+  config.after(:each) do
     User.all.destroy!
   end
+
   def setup_user
     @user =  User.create(:login => 'quentin', :email => 'quentin@example.com', :password => 'foo', :password_confirmation => 'foo')
   end
 
   def login_user
-    response = request url(:perform_login), :method => "PUT", :params => { :login => 'quentin', :password => 'foo' }
-    response.should redirect_to("/")
+    visit '/'
+    fill_in 'login', :with => 'quentin'
+    fill_in 'password', :with => 'foo'
+    click_button 'Log in'
   end
 
   def default_request_parameters
@@ -104,14 +126,15 @@ end
 
 given "an authenticated user requesting auth" do
   setup_user
-  request("/servers", :params => default_request_parameters)
+  visit '/servers', :get, default_request_parameters
   login_user
 end
 
 given 'an returning user with trusted hosts in their session' do
   setup_user
-  request("/servers", :params => default_request_parameters)
+  visit '/servers', :get, default_request_parameters
   login_user
-  response = request("/servers/decision?yes=yes", {'REQUEST_METHOD' => 'POST'})
+
+  visit '/servers/decision', :post, {'yes' => 'yes'}
   response.status.should == 302
 end

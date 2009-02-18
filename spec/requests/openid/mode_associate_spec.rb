@@ -8,8 +8,7 @@ describe "OpenID Mode: Associate" do
                     "openid.assoc_type"   => 'HMAC-SHA1',
                     "openid.dh_consumer_public"=> session.get_request['dh_consumer_public']})
 
-      response = request("/servers", :params => params)
-      response.should be_successful
+      visit '/servers', :get, params
 
       message = OpenID::Message.from_kvform(response.body)
       secret = session.extract_secret(message)

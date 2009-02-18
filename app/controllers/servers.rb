@@ -75,7 +75,7 @@ class Servers < Application
   end
   
   def idp_page(id = nil)
-    provides :xrds
+    only_provides :xrds
     @types = [ OpenID::OPENID_IDP_2_0_TYPE ]
     render :layout => false
   end
@@ -83,7 +83,8 @@ class Servers < Application
   def acceptance(message="Do you trust this site with your identity?")
     @oidreq = session[:last_oidreq]
 
-    return redirect(url(:user, {:id => session[:username]})) if @oidreq.nil?
+    Merb.logger.info session.inspect
+    return redirect(identity_url_for_user) if @oidreq.nil?
 
     if message
       session[:notice] = message

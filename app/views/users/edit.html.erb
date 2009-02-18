@@ -1,10 +1,10 @@
 <h2>You are so awesome</h2>
 <%= error_messages_for @user, :header => '<h2>Unable to Signup</h2>' %>
-<%= form :action => url(:users) do %>
+<%= form_for @user, :action => url(:user, @user) do %>
   <%= hidden_field :name => '_method', :value => 'put' %>
-  <%= text_field :id => 'login', :name => 'login', :label => "Login", :value => @user.login %>
-  <%= text_field :id => 'email', :name => 'email', :label => "Email Address", :value => @user.email %>
-  <%= password_field :id => 'password', :name => 'password', :label => "Password" %>
-  <%= password_field :id => 'password_confirmation', :name => 'password_confirmation', :label => "Password, Again to confirm" %>
-  <%= submit "Create" %>
+  <%= text_field :login, :label => "Login" %>
+  <%= text_field :email, :label => "Email Address" %>
+  <%= password_field :id => 'user_password', :name => 'user[password]', :label => "Password" %>
+  <%= password_field :id => 'user_password_confirmation', :name => 'user[password_confirmation]', :label => "Password, Again to confirm" %>
+  <%= submit "Update" %>
 <% end =%>

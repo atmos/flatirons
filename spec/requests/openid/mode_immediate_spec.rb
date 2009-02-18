@@ -5,7 +5,7 @@ describe "OpenID Mode: Immediate" do
                     "openid.mode" => "checkid_immediate",
                     "openid.return_to"  => 'http://consumerapp.com/'})
 
-      response = request("/servers", :params => params)
+      visit("/servers", :get, params)
       response.status.should == 302
 #      redirect_params = query_parse(Addressable::URI.parse(response.headers['Location']).query)
 #      %w(user_setup_url mode sig assoc_handle signed).each do |k|

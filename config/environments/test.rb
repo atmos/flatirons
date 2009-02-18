@@ -10,3 +10,8 @@ Merb::Config.use { |c|
   # or redirect logger using IO handle
   # c[:log_stream] = STDOUT
 }
+
+Merb::BootLoader.after_app_loads do
+  Merb::Mailer.delivery_method = :test_send
+  DataMapper.auto_migrate!
+end

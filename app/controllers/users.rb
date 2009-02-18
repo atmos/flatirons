@@ -15,14 +15,15 @@ class Users < Application
     @user = User.new
     render
   end
-  
+
   def edit
     render
   end
-  
+
   def create(login, email)
     @user = User.create(:login => login, :email => email)
     if @user.valid?
+      Merb.logger.info @user.inspect
       send_mail(SignupMailer, :notify_on_event, {
         :from => 'root@example.com',
         :to => @user.email,
@@ -36,11 +37,12 @@ class Users < Application
 
   def update(id, user)
     @user = User.first(:login => id)
-    raise
+    redirect '/'
   end
 
   def signup(token)
     @user = User.first(:registration_token => token)
+    session[:user] = @user.id
     render :edit
   end
 

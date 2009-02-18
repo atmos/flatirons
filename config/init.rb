@@ -29,5 +29,4 @@ end
 Merb.add_mime_type(:xrds, :to_xrds, %w[application/xrds+xml], "Content-Encoding" => "gzip")
 
 Merb::BootLoader.after_app_loads do
-  DataMapper.auto_migrate!
 end

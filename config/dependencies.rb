@@ -25,9 +25,10 @@ dependency 'merb_datamapper', merb_gems_version
 dependency "ruby-openid", '=2.1.2', :require_as => 'openid'
 
 dependency 'nokogiri', '>=1.0.6',   :require_as => nil
-dependency 'webrat', '=0.3.2',      :require_as => nil
+dependency 'webrat', '>=0.4.1',     :require_as => nil
 dependency 'rr',                    :require_as => nil
 dependency 'rcov',                  :require_as => nil
 dependency 'mongrel',               :require_as => nil
 dependency 'ruby-debug', '=0.10.3', :require_as => nil
+dependency 'do_postgres',           :require_as => nil
 
