@@ -8,8 +8,8 @@ and it seemed best to learn the code by specing as I go.  This works w/ merb
 
 Requirements (UNIX)
 -------------------
-% sudo gem install thor
-% thor merb:gem:install
+% sudo gem install bundler
+% gem bundle
 
 On Localhost
 ------------
@@ -44,4 +44,3 @@ Guidance
 -------------
 http://openid.net/specs/openid-authentication-2_0.html
 http://wiki.openid.net/OpenID_Authentication_2.0
-

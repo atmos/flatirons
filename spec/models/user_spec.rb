@@ -1,3 +1,5 @@
+require File.expand_path(File.join(File.dirname(__FILE__), '..', 'spec_helper'))
+
 describe User do
   describe "#create with valid params" do
     it "should be valid" do

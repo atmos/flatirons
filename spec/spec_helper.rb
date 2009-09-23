@@ -1,15 +1,9 @@
-require "rubygems"
-
-# Add the local gems dir if found within the app root; any dependencies loaded
-# hereafter will try to load from the local gems before loading system gems.
-if (local_gem_dir = File.join(File.dirname(__FILE__), '..', 'gems')) && $BUNDLE.nil?
-  $BUNDLE = true; Gem.clear_paths; Gem.path.unshift(local_gem_dir)
-end
+project_root = File.expand_path(File.dirname(__FILE__))
+require File.join(project_root, '..', 'vendor', 'gems', 'environment')
 
 require "merb-core"
-require "spec" # Satisfies Autotest and anyone else not using the Rake tasks
+require "spec"
 require 'pp'
-require 'ruby-debug'
 require 'webrat/merb'
 require 'webrat/selenium'
 # this loads all plugins required in your init file so don't add them
@@ -67,13 +61,15 @@ class Merb::Mailer
   self.delivery_method = :test_send
 end
 
-if ENV['SELENIUM'].nil?
-  Webrat.configuration.mode = :merb
-else 
-  Webrat.configuration.mode = :selenium
-  Webrat.configuration.application_framework = :merb
-  Webrat.configuration.application_environment = :test
-  Webrat.configuration.application_port = 4000
+Webrat.configure do |config|
+  if ENV['SELENIUM'].nil?
+    config.mode = :merb
+  else
+    config.mode = :selenium
+    config.application_framework = :merb
+    config.application_environment = :test
+    config.application_port = 4000
+  end
 end
 
 # setup helpers for rspec
